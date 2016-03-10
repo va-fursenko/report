@@ -9,6 +9,7 @@
 /* Base libs */
 require_once(CONFIG::ROOT . '/lib/class.BaseException.php');
 require_once(CONFIG::ROOT . '/lib/class.Log.php');
+require_once(CONFIG::ROOT . '/lib/class.Db.php');
 require_once(CONFIG::ROOT . '/lib/class.Tpl.php');
 require_once(CONFIG::ROOT . '/lib/class.ErrorHandler.php');
 

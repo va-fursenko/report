@@ -1,0 +1,6 @@
+*.txt
+.idea
+*.log
+*.sql
+*.xls
+data/*

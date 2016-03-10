@@ -40,7 +40,7 @@ function customExceptionHandler(Exception $e){
             Log::A_PHP_ERROR_CODE       => $e->getCode(),
             Log::A_PHP_FILE_NAME        => $e->getFile(),
             Log::A_PHP_FILE_LINE        => $e->getLine(),
-            Log::A_PHP_TRACE            => serialize($e->getTrace()),
+            //Log::A_PHP_TRACE            => serialize($e->getTrace()),
             Log::A_HTTP_REQUEST_METHOD  => $_SERVER['REQUEST_METHOD'],
             Log::A_HTTP_SERVER_NAME     => $_SERVER['SERVER_NAME'],
             Log::A_HTTP_REQUEST_URI     => $_SERVER['REQUEST_URI'],
@@ -78,15 +78,13 @@ function customErrorHandler($errNo, $errStr, $errFile, $errLine, $errContext = n
         Log::A_PHP_ERROR_CODE       => $errNo,
         Log::A_PHP_FILE_NAME        => $errFile,
         Log::A_PHP_FILE_LINE        => $errLine,
+        //Log::A_PHP_CONTEXT          => $errContext,
         Log::A_HTTP_REQUEST_METHOD  => $_SERVER['REQUEST_METHOD'],
         Log::A_HTTP_SERVER_NAME     => $_SERVER['SERVER_NAME'],
         Log::A_HTTP_REQUEST_URI     => $_SERVER['REQUEST_URI'],
         Log::A_HTTP_USER_AGENT      => $_SERVER['HTTP_USER_AGENT'],
         Log::A_HTTP_REMOTE_ADDRESS  => $_SERVER['REMOTE_ADDR'],
     ];
-    if (is_array($errContext) && count($errContext) > 0){
-        $mArr[Log::A_PHP_TRACE] = $errContext;
-    }
     // Без вьюх пока только так
     echo "Error occurred: \"{$mArr[Log::A_PHP_ERROR_MESSAGE]}\". Check log.";
     Log::save(

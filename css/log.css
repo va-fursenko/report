@@ -38,8 +38,8 @@ td.l-col{
     position:   absolute;
     text-align: center;
     height:     50px;
-    top:        8px;
-    left:       500px;
+    top:        3px;
+    left:       135px;
 }
 
 .tab-header{
@@ -51,4 +51,8 @@ td.l-col{
 .tab-content{
     position: absolute;
     top:      48px;
+}
+
+#logDiv{
+    margin: 5px;
 }

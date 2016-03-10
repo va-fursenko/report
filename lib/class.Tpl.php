@@ -223,6 +223,7 @@ class Tpl{
             throw new TplException(self::L_TPL_FILE_UNREACHABLE . ': ' . $fileName, E_USER_WARNING);
         }
         $result = self::parseStrBlock(
+
                 $content, Filter::strBetween(
                         file_get_contents($fileName), 
                         "[\$$blockName]" . ($style != '' ? "[$style]" : ''), 

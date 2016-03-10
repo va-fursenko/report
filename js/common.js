@@ -11,11 +11,15 @@
  * @param message Не поверите, та самая строка
  */
 function logLine(message){
-    var d = new Date();
-    var t = (d.getHours() > 9 ? d.getHours() : '0' + d.getHours()) + ':' +
+    if (message !== '') {
+        var d = new Date();
+        var t = (d.getHours() > 9 ? d.getHours() : '0' + d.getHours()) + ':' +
             (d.getMinutes() > 9 ? d.getMinutes() : '0' + d.getMinutes()) + ':' +
             (d.getSeconds() > 9 ? d.getSeconds() : '0' + d.getSeconds());
-    $("#logPre").text($("#logPre").text() + '[' + t + '] ' + message + "\n");
+        $("#logPre").text($("#logPre").text() + '[' + t + '] ' + message + "\n");
+    }else{
+        $("#logPre").text($("#logPre").text() + "\n");
+    }
 }
 
 
@@ -25,29 +29,35 @@ function logLine(message){
  * @param act Действие для передачи в контроллер
  */
 function nextStep(act){
-    $("#logLoader").show();
     $.ajax({
         type: 'GET',
         url: '/controller.php?action=' + act,
         dataType: 'json',
+        timeout: 240000,
         success: function (data) {
             if (data.success) {
                 logLine(data.message == ''
                     ? "Завершено"
-                    : "Завершено: " + data.message
+                    : "Завершено. " + data.message
                 );
                 if (typeof data.nextStep !== 'undefined'){
+                    logLine('');
                     logLine(data.nextMessage);
                     nextStep(data.nextStep);
+                }else{
+                    $("#beginBtn").show();
+                    $("#logLoader").hide();
                 }
             }else{
                 logLine("# Произошла ошибка: " + data.message);
+                $("#beginBtn").show();
+                $("#logLoader").hide();
             }
-            $("#logLoader").slideUp();
         },
         error: function() {
             logLine("# Произошла ошибка");
-            $("#logLoader").slideUp();
+            $("#logLoader").hide();
+            $("#beginBtn").show();
         }
     });
 }
@@ -59,8 +69,21 @@ function nextStep(act){
  * Действия при загрузке страницы
  */
 $(window).load(function(){
-    logLine('# Импорт списка айдишников');
+    $(".notice-row").slideDown(500);
 
-    // Выполняем первый шаг
-    nextStep('openXLS');
+    // Старт отчёта
+    $("#beginBtn").click(function(){
+        $(".notice-row").slideUp();
+        $("#beginBtn").hide();
+        $("#logLoader").show();
+        $("#logPre").text('');
+
+        logLine('# Импорт широкой матрицы');
+        //logLine('# Импорт шаблона');
+
+        // Выполняем первый шаг
+        //nextStep('openTemplate');
+        nextStep('openFirst');
+        //nextStep('merge');
+    })
 });

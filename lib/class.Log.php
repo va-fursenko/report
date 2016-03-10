@@ -49,6 +49,7 @@ class Log{
     const A_PHP_FILE_NAME         = 'php_file_name';
     const A_PHP_FILE_LINE         = 'php_file_line';
     const A_PHP_TRACE             = 'php_trace';
+    const A_PHP_CONTEXT           = 'php_context';
     const A_DB_LAST_QUERY         = 'db_last_query';
     const A_DB_QUERY_TYPE         = 'db_query_type';
     const A_DB_ROWS_AFFECTED      = 'db_rows_affected';
@@ -111,6 +112,7 @@ class Log{
             self::A_PHP_FILE_NAME         => 'Файл',
             self::A_PHP_FILE_LINE         => 'Строка',
             self::A_PHP_TRACE             => 'Стек вызова',
+            self::A_PHP_CONTEXT           => 'Контекст вызова',
             self::A_EXCEPTION             => 'Исключение',
             self::A_HTTP_REQUEST_METHOD   => 'Метод запроса',
             self::A_HTTP_SERVER_NAME      => 'Сервер',
@@ -144,7 +146,8 @@ class Log{
                         break;
 
                     case self::A_PHP_TRACE :
-                        $res = Filter::sqlUnfilter(var_export(unserialize($data), true));
+
+                        $res = Filter::slashesStrip(var_export(unserialize($data), true));
 
                         // Пропишем стили для наглядного вывода лога в /log/index.php, но и здесь на всякий случай оставим
                         // <div style="min-height:100px; max-height:500px; overflow-x:scroll; overflow-y:scroll; font-size:7pt; border:1px dashed; padding:2px 0px 4px 6px; background-color:#dddddd;">
@@ -205,7 +208,7 @@ class Log{
      * @return bool
      */
     protected static function toDb($messageArray){
-        $messageArray = Filter::sqlFilterAll($messageArray);
+        $messageArray = Filter::slashesAdd($messageArray);
         /** @todo Дописать нормальную работу с БД */
         $result = self::$logDb->query($messageArray);
         return $result;
@@ -370,13 +373,14 @@ class Log{
      * @return array
      */
     public static function dumpException(Exception $e){
+        //$trace = $e->getTrace();
         return [
             self::A_EXCEPTION            => $e->__toString(),
             self::A_PHP_ERROR_MESSAGE    => $e->getMessage(),
             self::A_PHP_ERROR_CODE       => $e->getCode(),
             self::A_PHP_FILE_NAME        => $e->getFile(),
             self::A_PHP_FILE_LINE        => $e->getLine(),
-            self::A_PHP_TRACE            => serialize($e->getTrace()),
+            //self::A_PHP_TRACE            => serialize($trace), // Serialization of 'Closure' is not allowed
             self::A_SESSION_ID           => session_id(),
             self::A_HTTP_REQUEST_METHOD  => $_SERVER['REQUEST_METHOD'],
             self::A_HTTP_SERVER_NAME     => $_SERVER['SERVER_NAME'],
@@ -389,7 +393,7 @@ class Log{
 
 
     /**
-     * Добавление одной строки в лог
+     * Добавление к строке метки времени для вывода в лог
      * @param string $message
      * @return string
      */

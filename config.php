@@ -16,7 +16,7 @@ define('HOST', 'http://' . $_SERVER['HTTP_HOST'] . '/');
 
 
 /**
- * Класс конфига со статическими свойствами
+ * Класс конфига со статическими свойствами. Так будет проще с ним потом работать
  * @see http://php.net/manual/ru/language.oop5.magic.php#language.oop5.magic.debuginfo
  * @todo Закрыть данные от дебага с помощью магических методов
  */
@@ -35,7 +35,7 @@ class CONFIG{
     /** @const string Кодировка страниц */
     const PAGE_CHARSET = 'UTF-8';
     /** @const string Общий заголовок страниц */
-    const PAGE_TITLE = 'That report';
+    const PAGE_TITLE = 'Micr0';
 
 
     # Логи
