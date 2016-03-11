@@ -28,7 +28,7 @@ try {
 
         // Первая матрица (большая)
         case 'openFirst':
-            $result = readFirstMatrix();
+            $result = readMatrix(XLS_FIRST, MATR_FIRST_COLS);
             if ($result['success']) {
                 $result['nextStep'] = 'openSecond';
                 $result['nextMessage'] = "# Импорт узкой матрицы";
@@ -37,7 +37,7 @@ try {
 
         // Вторая матрица (маленькая)
         case 'openSecond':
-            $result = readSecondMatrix();
+            $result = readMatrix(XLS_SECOND, MATR_SECOND_COLS);
             if ($result['success']) {
                 $result['nextStep'] = 'merge';
                 $result['nextMessage'] = "# Слияние массивов в общий список";

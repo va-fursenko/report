@@ -17,5 +17,6 @@
     <div class="container" style="margin-top: 100px;">
         <?= $content ?>
     </div>
+
 </body>
 </html>

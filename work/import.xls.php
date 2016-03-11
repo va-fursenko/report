@@ -80,7 +80,12 @@ function getMatrix($filename, $sheetN, $colStartFrom, $rowStartFrom, $colCount){
     // Смотрим, что в первой рабочей строке
     $val = trim($sheet->getCellByColumnAndRow($colStartFrom, $rowCounter)->getValue());
     while ($val !== '' && $val !== 'Total') { // Грубовато, но заканчиваем чтение стобца
-
+/*
+        // Все айдишники должны быть уникальными
+        if (isset($matrix[$val])){
+            return $val;
+        }
+*/
         // Добавляем строку с указанным айдишником
         $matrix[$val] = [];
         // Собираем матрицу указанной ширины
@@ -99,45 +104,31 @@ function getMatrix($filename, $sheetN, $colStartFrom, $rowStartFrom, $colCount){
 
 
 
-
-
 /**
  * Читаем первую матрицу (большую)
+ * @param string $fileName Имя файла без расширения
+ * @param int $colCount Число столбцов для считывания
  * @return mixed
  */
-function readFirstMatrix(){
+function readMatrix($fileName, $colCount){
     // Читаем и сериализуем
-    $matrix = getMatrix(XLS_FIRST, TPL_SHEET, TPL_FIRST_COL, TPL_FIRST_ROW, MATR_FIRST_COLS);
-    file_put_contents(XLS_ROOT . XLS_FIRST, json_encode($matrix));
+    $matrix = getMatrix($fileName, TPL_SHEET, TPL_FIRST_COL, TPL_FIRST_ROW, $colCount);
+
+    // Если вместо массива вернулась строка, значит это имя повторяющегося ключа
+    if (is_string($matrix)){
+        return [
+            'success' => false,
+            'message' => "Повторяющийся ключ: $matrix",
+        ];
+    }
+
+    file_put_contents(XLS_ROOT . $fileName, json_encode($matrix));
 
     return [
         'success' => true,
         'message' => "Считано записей: " . count($matrix)// . "\n" . showArr($matrix)
     ];
 }
-
-
-
-
-
-
-
-/**
- * Читаем вторую матрицу (маленькую)
- * @return mixed
- */
-function readSecondMatrix(){
-    // Читаем и сериализуем
-    $matrix = getMatrix(XLS_SECOND, TPL_SHEET, TPL_FIRST_COL, TPL_FIRST_ROW, MATR_SECOND_COLS);
-    file_put_contents(XLS_ROOT . XLS_SECOND, json_encode($matrix));
-
-    return [
-        'success' => true,
-        'message' => "Считано записей: " . count($matrix)// . "\n" . showArr($matrix)
-    ];
-}
-
-
 
 
 
@@ -167,6 +158,11 @@ function readTemplate(){
     // Смотрим, что в первой рабочей строке
     $val = trim($sheet->getCellByColumnAndRow($colStartFrom, $rowCounter)->getValue());
     while ($val !== '' && $val !== 'Total') { // Грубовато, но заканчиваем чтение стобца
+
+        // Все айдишники должны быть уникальными
+        if (isset($matrix[$val])){
+            return $val;
+        }
 
         // Добавляем строку с указанным айдишником
         $matrix[$val] = [];

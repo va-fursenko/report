@@ -78,6 +78,9 @@ $(window).load(function(){
         $("#logLoader").show();
         $("#logPre").text('');
 
+        // Без этого не работает
+        $("#mainImg").slideDown(1000);
+
         logLine('# Импорт широкой матрицы');
         //logLine('# Импорт шаблона');
 
