@@ -8,7 +8,7 @@
 
 
 // Папка для рабочих данных
-define('XLS_ROOT', CONFIG::ROOT . DIRECTORY_SEPARATOR . 'data/');
+define('XLS_ROOT', CONFIG::ROOT . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR);
 // Расширение входных файлов
 define('XLS_EXT', '.xls');
 // Имя временного файла для двух объединённых матриц
@@ -59,7 +59,7 @@ function showArr($a){
 
 
 /**
- * Читаем из указанного файла с указанной матрицы
+ * Читаем матрицу из указанного файла по указанному параметру
  * @param string $filename  Имя файла
  * @param int $sheetN       Номер страницы в файле
  * @param int $colStartFrom Столбец, с которого начинается чтение
@@ -79,13 +79,14 @@ function getMatrix($filename, $sheetN, $colStartFrom, $rowStartFrom, $colCount){
 
     // Смотрим, что в первой рабочей строке
     $val = trim($sheet->getCellByColumnAndRow($colStartFrom, $rowCounter)->getValue());
+    $val = iconv('cp866', 'utf-8', $val);
     while ($val !== '' && $val !== 'Total') { // Грубовато, но заканчиваем чтение стобца
-/*
+
         // Все айдишники должны быть уникальными
         if (isset($matrix[$val])){
             return $val;
         }
-*/
+
         // Добавляем строку с указанным айдишником
         $matrix[$val] = [];
         // Собираем матрицу указанной ширины
@@ -105,7 +106,7 @@ function getMatrix($filename, $sheetN, $colStartFrom, $rowStartFrom, $colCount){
 
 
 /**
- * Читаем первую матрицу (большую)
+ * Читаем первую (широкую), или вторую (узкую) матрицу
  * @param string $fileName Имя файла без расширения
  * @param int $colCount Число столбцов для считывания
  * @return mixed
@@ -127,65 +128,6 @@ function readMatrix($fileName, $colCount){
     return [
         'success' => true,
         'message' => "Считано записей: " . count($matrix)// . "\n" . showArr($matrix)
-    ];
-}
-
-
-
-
-
-
-/**
- * Импорт файла шаблона
- * @return array
- */
-function readTemplate(){
-    $sheetN       = 1;  // Номер страницы в документе. В шаблоне это вторая страница
-    $colStartFrom = 6;  // Первый столбец для выборки
-    $rowCounter   = 4;  // Первый ряд для выборки - такое ощущение, что счёт почему-то идёт с 1
-    $colCount     = [   // Число столбцов для чтения - два фрагмента с заданной ранее шириной
-        MATR_FIRST_COLS,
-        MATR_SECOND_COLS
-    ];
-
-    // Открываем файл, устанавливаем индекс активного листа и получаем его
-    $xls = PHPExcel_IOFactory::load(XLS_ROOT . XLS_TEMPLATE . XLS_EXT);
-    $xls->setActiveSheetIndex($sheetN);
-    $sheet = $xls->getActiveSheet();
-
-    $matrix = [];
-
-    // Смотрим, что в первой рабочей строке
-    $val = trim($sheet->getCellByColumnAndRow($colStartFrom, $rowCounter)->getValue());
-    while ($val !== '' && $val !== 'Total') { // Грубовато, но заканчиваем чтение стобца
-
-        // Все айдишники должны быть уникальными
-        if (isset($matrix[$val])){
-            return $val;
-        }
-
-        // Добавляем строку с указанным айдишником
-        $matrix[$val] = [];
-        // Собираем первую матрицу указанной ширины
-        for ($i = 1; $i <= $colCount[0]; $i++){
-            $matrix[$val][] = intval($sheet->getCellByColumnAndRow($colStartFrom + 1 + $i, $rowCounter)->getValue());
-        }
-        // Собираем вторую матрицу указанной ширины
-        for ($i = 1; $i <= $colCount[1]; $i++){
-            $matrix[$val][] = intval($sheet->getCellByColumnAndRow($colStartFrom + 3 + $colCount[0] + $i, $rowCounter)->getValue());
-        }
-
-        // Переходим к следующему ряду
-        $rowCounter++;
-        $val = trim($sheet->getCellByColumnAndRow($colStartFrom, $rowCounter)->getValue());
-    }
-
-    // Сериализуем матрицу шаблона
-    file_put_contents(XLS_ROOT . XLS_TEMPLATE, json_encode($matrix));
-
-    return [
-        'success' => true,
-        'message' => "Считано записей: " . count($matrix) . "\n" . showArr($matrix)
     ];
 }
 

@@ -1,0 +1,13 @@
+{
+    "name": "escc/incoming-report",
+    "description": "Incoming statistic report",
+    "authors": [
+        {
+            "name": "viktor",
+            "email": "va.fursenko@yandex.ru"
+        }
+    ],
+    "require": {
+        "phpoffice/phpexcel": "^1.8"
+    }
+}

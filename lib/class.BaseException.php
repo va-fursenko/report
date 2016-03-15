@@ -11,7 +11,7 @@
  * @see https://opensource.org/licenses/MIT
  */
 
-require_once('class.Log.php');
+require_once(__DIR__ . DIRECTORY_SEPARATOR . 'class.Log.php');
 
 
 /**

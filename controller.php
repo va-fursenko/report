@@ -17,7 +17,7 @@ require_once(__DIR__ . '/config.php');
 require_once(__DIR__ . '/lib/inc.common.php');
 
 // Рабочий модуль
-require_once(__DIR__ . '/work/report.php');
+require_once(__DIR__ . '/work/import.xls.php');
 
 
 
@@ -25,6 +25,10 @@ require_once(__DIR__ . '/work/report.php');
 try {
 
     switch ($act) {
+
+
+
+
 
         // Первая матрица (большая)
         case 'openFirst':
@@ -35,41 +39,58 @@ try {
             }
             break;
 
+
+
+
+
         // Вторая матрица (маленькая)
         case 'openSecond':
             $result = readMatrix(XLS_SECOND, MATR_SECOND_COLS);
             if ($result['success']) {
-                $result['nextStep'] = 'merge';
+                $result['nextStep'] = 'process';
                 $result['nextMessage'] = "# Слияние массивов в общий список";
             }
             break;
 
-        // Сливаем оба полученных массива вместе, получая список новых элементов
-        case 'merge':
-            $result = mergeMatrixes();
-            if ($result['success']) {
-                $result['nextStep'] = 'openTemplate';
-                $result['nextMessage'] = "# Импорт шаблона";
-            }
-            break;
 
-        // Сливаем оба полученных массива вместе, получая список новых элементов
-        case 'openTemplate':
-            $result = readTemplate();
-            if ($result['success']) {
-                $result['nextStep'] = 'process';
-                $result['nextMessage'] = "# Обработка данных";
-            }
-            break;
+
+
 
         // Сливаем оба полученных массива вместе, получая список новых элементов
         case 'process':
-            $result = processData();
-            if ($result['success']) {
-                //$result['nextStep'] = '';
-                //$result['nextMessage'] = "# ";
+
+            // Пробуем создать объект отчёта и просчитать нужные данные
+            try {
+
+                // Создаём объект отчёта
+                $report = new Report(
+                    json_decode(file_get_contents(XLS_ROOT . XLS_FIRST), true),
+                    json_decode(file_get_contents(XLS_ROOT . XLS_SECOND), true)
+                );
+
+                // Сериализуем объединённую матрицу про запас
+                file_put_contents(XLS_ROOT . XLS_MERGED, json_encode($report->cells));
+
+                // Вычисляем-вычисляем...
+                $report->process();
+
+                // Возвертаем осмысленное послание
+                $result = [
+                    'success'   => true,
+                    'message'   => "Записей в объединённом массиве: " . $report->rowsCount()// . "\nИтог:\n" . showArr($groups, true),
+                ];
+
+                // В случае исключения сообщаем причину
+            }catch (Exception $e){
+                $result = [
+                    'success'   => false,
+                    'message'   => $e->getMessage(),
+                ];
             }
             break;
+
+
+
 
         // O_o
         default:
@@ -78,6 +99,9 @@ try {
                 'message' => "Неизвестная команда $act",
             ];
     }
+
+
+
 
 // А что, а вдруг?
 }catch(Exception $e){
