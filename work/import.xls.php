@@ -14,13 +14,12 @@ define('XLS_EXT', '.xls');
 // Имя временного файла для двух объединённых матриц
 define('XLS_MERGED', 'XLS_MERGED');
 
+
+
 // Исходные xls файлы
 define('XLS_FIRST', 'WEEKC_CH');
 define('XLS_SECOND', 'reclama3');
 define('XLS_TEMPLATE', 'Template(month)new');
-
-
-
 
 
 
@@ -37,6 +36,7 @@ define('MATR_SECOND_COLS', 6);
 
 
 
+/** @todo А зачем нам вообще теперь нужно морочиться с экселем, если можно читать данные из цсв? */
 
 
 

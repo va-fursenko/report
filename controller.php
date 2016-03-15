@@ -18,6 +18,7 @@ require_once(__DIR__ . '/lib/inc.common.php');
 
 // Рабочий модуль
 require_once(__DIR__ . '/work/import.xls.php');
+require_once(__DIR__ . '/work/class.Report.php');
 
 
 
@@ -48,7 +49,7 @@ try {
             $result = readMatrix(XLS_SECOND, MATR_SECOND_COLS);
             if ($result['success']) {
                 $result['nextStep'] = 'process';
-                $result['nextMessage'] = "# Слияние массивов в общий список";
+                $result['nextMessage'] = "# Слияние массивов в общий список и вычисление отчёта";
             }
             break;
 
@@ -77,7 +78,7 @@ try {
                 // Возвертаем осмысленное послание
                 $result = [
                     'success'   => true,
-                    'message'   => "Записей в объединённом массиве: " . $report->rowsCount()// . "\nИтог:\n" . showArr($groups, true),
+                    'message'   => "Записей в объединённом массиве: " . $report->rowsCount() . "\nИтог:\n" . showArr($report->result),
                 ];
 
                 // В случае исключения сообщаем причину

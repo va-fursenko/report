@@ -21,7 +21,7 @@
             <a id="beginBtn" class="log-caption btn btn-primary" href="javascript:void(0);">Красная кнопка</a>
         </div>
 
-        <pre class="log-container" id="logPre">{lines}</pre>
+        <pre class="log-container" id="logPre"></pre>
 
         <div class="row notice-row">
             <span><sup class="text-danger">*</sup>Скрипт может выполняться значительное время. Возможно, придётся настроить web-сервер и PHP, а так же, дать права записи на папку data/ в проекте</span>

@@ -81,12 +81,11 @@ $(window).load(function(){
         // Без этого не работает
         $("#mainImg").slideDown(1000);
 
-        logLine('# Импорт широкой матрицы');
-        //logLine('# Импорт шаблона');
+        //logLine('# Импорт широкой матрицы');
+        logLine("# Слияние массивов в общий список и вычисление отчёта");
 
         // Выполняем первый шаг
-        //nextStep('openTemplate');
-        nextStep('openFirst');
-        //nextStep('merge');
+        //nextStep('openFirst');
+        nextStep('process');
     })
 });
