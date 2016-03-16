@@ -268,7 +268,8 @@ class Log{
         if (!is_readable($filePath)) {
             throw new LogException(LogException::L_LOG_FILE_UNREADABLE . ' - ' . $fileName);
         }
-        $content = explode(self::MESSAGE_SEPARATOR, file_get_contents($filePath));
+        $content = file_get_contents($filePath);
+        $content = explode(self::MESSAGE_SEPARATOR, $content);
         $result = '';
         if (count($content) > 1) {
             foreach ($content as $key => $message) {

@@ -70,7 +70,10 @@ try {
                 );
 
                 // Сериализуем объединённую матрицу про запас
-                file_put_contents(XLS_ROOT . XLS_MERGED, json_encode($report->cells));
+                file_put_contents(XLS_ROOT . XLS_MERGED, json_encode($report->cells()));
+
+                // Грузим из файла формулы
+                $report->loadFormulas(CONFIG::ROOT . '/data/sheet2.xml');
 
                 // Вычисляем-вычисляем...
                 $report->process();
@@ -78,7 +81,7 @@ try {
                 // Возвертаем осмысленное послание
                 $result = [
                     'success'   => true,
-                    'message'   => "Записей в объединённом массиве: " . $report->rowsCount() . "\nИтог:\n" . showArr($report->cells),
+                    'message'   => "Записей в объединённом массиве: " . $report->rowsCount() . "\nИтог:\n" . $report->showCells(false),
                 ];
 
                 // В случае исключения сообщаем причину
