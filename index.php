@@ -11,7 +11,6 @@
     require_once(CONFIG::ROOT . DIRECTORY_SEPARATOR . CONFIG::TPL_DIR . '/layout.main.php');
 
 
-
 $report = new Report(
     json_decode(file_get_contents(XLS_ROOT . XLS_FIRST), true),
     json_decode(file_get_contents(XLS_ROOT . XLS_SECOND), true)
