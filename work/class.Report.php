@@ -75,6 +75,8 @@ class Report
 
     /** @property array Рабочие данные */
     public $cells = [];
+    /** @property array $intCells Массив $cells, проиндексированный числами по порядку с 0. Элементы ссылаются на элементы $cells */
+    public $intCells = [];
 
     /** @property array Результат отчёта */
     public $result = [];
@@ -117,13 +119,15 @@ class Report
                 throw new BaseException("Файлы расходятся. Ряд $rowIndex, ключи ['$keyFirst'] и ['$keySecond']");
             }
 
-            // Соединяем текущий ряд из первой и вторй матрицы
+            // Соединяем текущий ряд из первой и второй матрицы
             $this->cells[$keySecond] = array_merge($firstM[$keyFirst], $secondM[$keyFirst]);
+            $this->intCells[] = &$this->cells[$keySecond];
         }
 
         // Дописываем фиксированные строки в конце первой матрицы нулями
         foreach (self::PERMANENT_ROWS as $row){
             $this->cells[$row] = array_pad($firstM[$row], MATR_FIRST_COLS + MATR_SECOND_COLS, 0);
+            $this->intCells[] = &$this->cells[$row];
         }
 
         // Проходим по матрице и раскладываем строки по группам айдишников
