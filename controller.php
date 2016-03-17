@@ -81,7 +81,7 @@ try {
                 // Возвертаем осмысленное послание
                 $result = [
                     'success'   => true,
-                    'message'   => "Записей в объединённом массиве: " . $report->rowsCount() . "\nИтог:\n" . $report->showCells(false),
+                    'message'   => "Записей в объединённом массиве: " . $report->rowsCount() . "\nИтог:" . $report->showCells(false),
                 ];
 
                 // В случае исключения сообщаем причину

@@ -1,6 +1,10 @@
 <?php
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'result.captions.php';
+require_once(__DIR__ . DIRECTORY_SEPARATOR . 'config.Report.php');
+
+
+
+
 
 /**
  * Created by PhpStorm.
@@ -27,67 +31,31 @@ class Report
 
 
 
-    /** @const Постоянные строки в первом файле. Расположены в конце и не участвуют в сравнении */
-    const PERMANENT_ROWS = [
-        'Телеобзвон',
-        'REMAIL 1,2,3'
-    ];
+    /** @property array $group Сгруппированные айдишники
+     * [
+     *     'INTERNET' => ['INTERNET', 'INTERNET 2', 'INTERNET 9', ... ],
+     *     ...
+     */
+    public $rowGroups = [];
+
 
 
 
     // Инициализуется в result.captions.php Да, говнокод
+    /** @const Заголовки рядов результата */
     public static $RESULT_CAPTIONS = [];
 
-
+    /** @const Жёлтые ряды, которые вычисляются по одинаково простой схеме. Прогоним их через цикл */
+    public static $SINGLE_RESULT_ROWS = [];
 
     /** @const Группы айдишников, на которые забиваются все строки */
-    const GROUP_KEYS = [
-        '21 CENTURY',
-        'ASET SG',
-        'AUTOM. CONT.',
-        'BANK OFFICE',
-        'BIRTHDAY',
-        'BOOK CLUB',
-        'BUSINES MAIL',
-        'CERT DB MAIL',
-        'CONSULTANTS',
-        'CONTIN.GRAD.',
-        'COURIER',
-        'CROSSSELLING',
-        'D-T-D',
-        'DB MAIL',
-        'DOOR-TO-DOOR',
-        'EXHIBITION',
-        'EXT DB',
-        'FOLLOW UP',
-        'GOOGLE ADW',
-        'INFO-LINE',
-        'INTERNET',
-        'KIOSK',
-        'LCCIEB',
-        'LETTERS',
-        'MIR KNIGI',
-        'ORIFLAME',
-        'PHONE',
-        'POST OFFICE',
-        'PRINT MEDIA',
-        'Phone',
-        'Print Media',
-        'READERS DIG.',
-        'REMAIL',
-        'RW STATIONS',
-        'STUD BY STUD',
-        'TEST PHONE',
-        'Телеобзвон',
-        'REMAIL 1,2,3',
-    ];
+    public static $GROUP_KEYS = [];
 
+    /** @const Постоянные строки в первом файле. Расположены в конце и не участвуют в сравнении */
+    public static $PERMANENT_ROWS = [];
 
-
-    /** @const Связь между буквенными индексами */
-    protected static $COL_INDEXES = ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH'];
-    protected $COLS_INDEXES = [];
-
+    /** @const Связь между буквенной индексацией столбцов в xls и в матрице рабочих данных */
+    public static $COL_INDEXES = [];
 
 
     /** @property array Рабочие данные */
@@ -141,6 +109,9 @@ class Report
         if (is_int($row) && isset($this->keyIndexes[$row])) {
             $row = $this->keyIndexes[$row];
         }
+        if (!is_numeric($col)){
+            $col = self::colIndex($col);
+        }
         if (!isset($this->_cells[$row][$col])) {
             throw new BaseException("Неверная адресация в массиве: [$row][$col]");
         }
@@ -163,19 +134,16 @@ class Report
      */
     public function __construct($firstM, $secondM)
     {
-        // Вы же не собираетесь создавать два объекта класса подряд? :)
-        $this->COLS_INDEXES = array_flip(self::$COL_INDEXES);
-
         // За исключением двух строк в конце первого массива, они должны быть идентичными по ключам
 
         // Сравниваем длину с учётом постоянных элементов первой матрицы
-        if (count($firstM) - count(self::PERMANENT_ROWS) !== count($secondM)){
-            throw new BaseException('Размеры файлов не совпадают - ' . count($firstM) . ' (в т.ч. ' . count(self::PERMANENT_ROWS) . ' постоянные) и ' . count($secondM));
+        if (count($firstM) - count(self::$PERMANENT_ROWS) !== count($secondM)){
+            throw new BaseException('Размеры файлов не совпадают - ' . count($firstM) . ' (в т.ч. ' . count(self::$PERMANENT_ROWS) . ' постоянные) и ' . count($secondM));
         }
 
         // В первом массиве должны быть постоянные элементы
-        if (!Filter::arrayKeyExists(self::PERMANENT_ROWS, $firstM)){
-            throw new BaseException("Первый файл не имеет всех постоянных строк ['" . implode("', '", self::PERMANENT_ROWS) . "']'");
+        if (!Filter::arrayKeyExists(self::$PERMANENT_ROWS, $firstM)){
+            throw new BaseException("Первый файл не имеет всех постоянных строк ['" . implode("', '", self::$PERMANENT_ROWS) . "']'");
         }
 
         // Пройдём по второму массиву и сольём его со первым, проверяя, чтобы порядок ключей был одинаковым
@@ -197,8 +165,18 @@ class Report
         }
 
         // Дописываем фиксированные строки в конце первой матрицы нулями
-        foreach (self::PERMANENT_ROWS as $index => $row){
-            $this->_cells[$row] = array_pad($firstM[$row], MATR_FIRST_COLS + MATR_SECOND_COLS, 0);
+        foreach (self::$PERMANENT_ROWS as $index => $row) {
+            $this->_cells[$row] = $firstM[$row];
+            // Ну куда ж деваться в серьёзных проектах без подобного элегантного кода и сарказма...
+            for ($col = self::colIndex('AC'); $col <= self::colIndex('AH'); $col++) {
+                // В узкой матрице тут должны лежать не нули, а суммы столбцов
+                if ($row == 'Телеобзвон') {
+                    $this->_cells[$row][$col] = array_sum(array_column($this->_cells, $col));
+                } else {
+                    $this->_cells[$row][$col] = 0;
+                }
+            }
+
             $this->keyIndexes[$rowIndex + $index] = $row;
             $this->keyIndexes[$row] = $rowIndex + $index;
         }
@@ -206,7 +184,23 @@ class Report
         // Человеку с фамилией Итого всегда достаётся больше других
         $this->_cells['Total'] = array_pad([], MATR_FIRST_COLS + MATR_SECOND_COLS, 0);
         foreach ($this->_cells['Total'] as $col => $value){
-            $this->_cells['Total'][$col] = array_sum(array_column($this->_cells, $col));
+            // В узкой матрице итог лежит в 'Теле', мать его, 'обзвоне'
+            if ($col < self::colIndex('AC')) {
+                $this->_cells['Total'][$col] = array_sum(array_column($this->_cells, $col));
+            }else{
+                $this->_cells['Total'][$col] = 0;
+            }
+        }
+
+        // Проходим по матрице и раскладываем строки по группам айдишников
+        foreach ($this->_cells as $key => $row) {
+            // Подбираем группу, с которой начинается айдишник $key, и прерываем внутренний цикл
+            foreach (self::$GROUP_KEYS as $groupKey) {
+                if (strpos($key, $groupKey) === 0 && !in_array($key, self::$PERMANENT_ROWS)) {
+                    $this->rowGroups[$groupKey][] = $key; //$groups[$groupKey][$key] = $row;
+                    break;
+                }
+            }
         }
 
     }
@@ -222,11 +216,152 @@ class Report
     public function process(){
         // Сегодня 15 марта 2016 года, 17:00 мск. Меня зовут Виктор и я начал вручную собирать примерно 384 ряда по 4 ячейки
         $this->result = [];
-        reset(self::$RESULT_CAPTIONS);
 
-        // Проходим по всем яйчейкам с правславными (которые можно содрать автоматом) формулами и смотрим, что там есть
-        for ($row = 8; $row <= 378; $row++){
-            $this->result[each(self::$RESULT_CAPTIONS)['value']] = [
+        #0 PRINT MEDIA
+        $this->result['Print media adverts'] = [
+            'prev_SG/TL' => $this->sumCells(['I', 'J'],               ['PRINT MEDIA'],    ['PRINT MEDIA  HAPPY_FAMILIY', 'PRINT MEDIA  INSERTS', 'PRINT MEDIA  INSERTS 2010', 'PRINT MEDIA  LABIRINT 09.15', 'PRINT MEDIA  LISA KROS.06.15', 'PRINT MEDIA  YEAR 2010', 'PRINT MEDIA  YEAR 2011', 'PRINT MEDIA  Z.RECEPTI 08.14', 'PRINT MEDIA  ZDOROVO']),
+            'prev_APP'   => $this->sumCells(['U', 'V', 'AC', 'AD'],   ['PRINT MEDIA'],    ['PRINT MEDIA  HAPPY_FAMILIY', 'PRINT MEDIA  INSERTS', 'PRINT MEDIA  INSERTS 2010', 'PRINT MEDIA  LABIRINT 09.15', 'PRINT MEDIA  LISA KROS.06.15', 'PRINT MEDIA  YEAR 2010', 'PRINT MEDIA  YEAR 2011', 'PRINT MEDIA  Z.RECEPTI 08.14', 'PRINT MEDIA  ZDOROVO']),
+            'SG/TL'      => $this->sumCells(['I'],                      ['PRINT MEDIA'],    ['PRINT MEDIA  HAPPY_FAMILIY', 'PRINT MEDIA  INSERTS', 'PRINT MEDIA  INSERTS 2010']),
+            'APP'        => $this->sumCells(['U'],                      ['PRINT MEDIA'],    ['PRINT MEDIA  HAPPY_FAMILIY', 'PRINT MEDIA  INSERTS', 'PRINT MEDIA  INSERTS 2010'])
+                          + $this->sumCells(['AC'],                     ['PRINT MEDIA'],    ['PRINT MEDIA  HAPPY_FAMILIY', 'PRINT MEDIA  INSERTS', 'PRINT MEDIA  INSERTS 2010', 'PRINT MEDIA  LABIRINT 09.15', 'PRINT MEDIA  LISA KROS.06.15',                           'PRINT MEDIA  YEAR 2011', 'PRINT MEDIA  Z.RECEPTI 08.14', 'PRINT MEDIA  ZDOROVO'])
+        ];
+
+        #1
+        $this->result['Print media inserts'] = [
+            'prev_SG/TL' => $this->sumCells(['I', 'J'],               'PRINT MEDIA  INSERTS'),
+            'prev_APP'   => $this->sumCells(['U', 'V', 'AC', 'AD'],   'PRINT MEDIA  INSERTS'),
+            'SG/TL'      => $this->sumCells(['I'],                    'PRINT MEDIA  INSERTS')
+                          + $this->sumCells(['I'],                    'PRINT MEDIA  INSERTS 2010'),
+            'APP'        => $this->sumCells(['U', 'AC'],              'PRINT MEDIA  INSERTS')
+                          + $this->sumCells(['U', 'AC'],              'PRINT MEDIA  INSERTS 2010')
+        ];
+
+        #2 REMAIL
+        $this->result['Remails'] = [
+            'prev_SG/TL' => $this->sumCells((['I', 'J']),             ['REMAIL'])
+                          + $this->sumCells((['I', 'J']),             'REMAIL 1,2,3'),
+            'prev_APP'   => $this->sumCells((['U', 'V', 'AC', 'AD']), ['REMAIL'])
+                          + $this->sumCells((['U', 'V']),             'REMAIL 1,2,3'),
+            'SG/TL'      => $this->sumCells(['I'],                    ['REMAIL'])
+                          + $this->sumCells(['I'],                    'REMAIL 1,2,3'),
+            'APP'        => $this->sumCells(['U', 'AC'],              ['REMAIL'])
+                          + $this->sumCells(['U', 'AC'],              'REMAIL 1,2,3')
+        ];
+
+        #3
+        $this->result['Follow up'] = [
+            'prev_SG/TL' => $this->sumCells(['I', 'J'],               'FOLLOW UP'),
+            'prev_APP'   => $this->sumCells(['U', 'V', 'AC', 'AD'],   'FOLLOW UP'),
+            'SG/TL'      => $this->sumCells(['I'],                    'FOLLOW UP'),
+            'APP'        => $this->sumCells(['U', 'AC'],              'FOLLOW UP')
+        ];
+
+        #4 CONTIN.GRAD.
+        $this->result['Continuation graduates'] = [
+            'prev_SG/TL' => $this->sumCells(['I', 'J'],               ['CONTIN.GRAD.']),
+            'prev_APP'   => $this->sumCells(['U', 'V', 'AC', 'AD'],   ['CONTIN.GRAD.']),
+            'SG/TL'      => $this->sumCells(['I'],                    ['CONTIN.GRAD.']),
+            'APP'        => $this->sumCells(['U', 'AC'],              ['CONTIN.GRAD.'])
+        ];
+
+        #5
+        $this->result['Internet'] = [
+            'prev_SG/TL' => $this->sumCells(['J'],         'INTERNET')
+                          + $this->sumCells(['J'],         'INTERNET     POP-UP WINDOW'),
+            'prev_APP'   => $this->sumCells(['V', 'AD'],   'INTERNET')
+                          + $this->sumCells(['V', 'AD'],   'INTERNET     POP-UP WINDOW'),
+            'SG/TL'      => $this->sumCells(['I'],         'INTERNET')
+                          + $this->sumCells(['I'],         'INTERNET     POP-UP WINDOW')
+                          + $this->sumCells(['I'],         'INTERNET     LETNIE CENI2011'),
+            'APP'        => $this->sumCells(['I', 'AC'],   'INTERNET')
+                          + $this->sumCells(['I', 'AC'],   'INTERNET     POP-UP WINDOW')
+                          + $this->sumCells(['I', 'AC'],   'INTERNET     LETNIE CENI2011')
+        ];
+
+        #6
+        $this->result['Internet Load'] = [
+            'prev_SG/TL' => $this->sumCells(['J'],         'INTERNET     LOAD'),
+            'prev_APP'   => $this->sumCells(['V', 'AD'],   'INTERNET     LOAD'),
+            'SG/TL'      => $this->sumCells(['I'],         'INTERNET     LOAD') + self::CELL_I1,
+            'APP'        => $this->sumCells(['U', 'AC'],   'INTERNET     LOAD')
+        ];
+
+
+        #7 Телеобзвон
+        $this->result['Telemarketing'] = [
+            'prev_SG/TL' => $this->sumCells(['I', 'J'],    'Телеобзвон'),
+            'prev_APP'   => $this->sumCells(['U', 'V'],   'Телеобзвон'),
+            'SG/TL'      => $this->sumCells(['I'],         'Телеобзвон')
+                          + $this->sumCells(['I'],         'INTERNET     LET CENI2011 TM')
+                          + $this->sumCells(['I'],         'INTERNET     TARGET.MYMIR'),
+            'APP'        => $this->sumCells(['U'],         'Телеобзвон')
+                          + $this->sumCells(['U', 'AC'],   'INTERNET     TARGET.MYMIR')
+                          + $this->sumCells(['U', 'AC'],   'INTERNET     LET CENI2011 TM')
+        ];
+
+        #8 COURIER
+        $this->result['Couriers'] = [
+            'prev_SG/TL' => $this->sumCells(['I', 'J'],               ['COURIER']),
+            'prev_APP'   => $this->sumCells(['U', 'V', 'AC', 'AD'],   ['COURIER']),
+            'SG/TL'      => $this->sumCells(['I'],                    ['COURIER'])
+                          + $this->sumCells(['I'],                     'STUD BY STUD SEPT2009'),
+            'APP'        => $this->sumCells(['U', 'AC'],              ['COURIER'])
+                          + $this->sumCells(['U', 'AC'],               'STUD BY STUD SEPT2009')
+        ];
+
+        #9 CONSULTANTS
+        $this->result['Consultants'] = [
+            'prev_SG/TL' => $this->sumCells(['I', 'J'],               ['CONSULTANTS']),
+            'prev_APP'   => $this->sumCells(['U', 'V', 'AC', 'AD'],   ['CONSULTANTS']),
+            'SG/TL'      => $this->sumCells(['I'],                    ['CONSULTANTS']),
+            'APP'        => $this->sumCells(['U', 'AC'],              ['CONSULTANTS'])
+        ];
+
+        #10 STUD BY STUD
+        $this->result['Student-by-Student'] = [
+            'prev_SG/TL' => $this->sumCells(['I', 'J'],               ['STUD BY STUD']),
+            'prev_APP'   => $this->sumCells(['U', 'V', 'AC', 'AD'],   ['STUD BY STUD']),
+            'SG/TL'      => $this->sumCells(['I'],                    ['STUD BY STUD'],                 ['STUD BY STUD SEP2012']), // И чем им этот год не понравился?))
+            'APP'        => $this->sumCells(['U', 'AC'],              ['STUD BY STUD'])
+        ];
+
+        #11 BIRTHDAY
+        $this->result['Birthday action'] = [
+            'prev_SG/TL' => $this->sumCells(['I', 'J'],               ['BIRTHDAY'],                     ['BIRTHDAY     PHONE DEC 2009', 'BIRTHDAY NON E-MAIL DEC 2012', 'BIRTHDAY NON E-MAIL DEC 2013', 'BIRTHDAY NON E-MAIL DEC 2014', 'BIRTHDAY NON E-MAIL DEC 2015', 'BIRTHDAY NON E-MAIL JAN 2016', 'BIRTHDAY NON E-MAIL JUL 2011', 'BIRTHDAY NON E-MAIL JUL 2014']),
+            'prev_APP'   => $this->sumCells(['U', 'V', 'AC', 'AD'],   ['BIRTHDAY'],                     ['BIRTHDAY     PHONE DEC 2009', 'BIRTHDAY NON E-MAIL DEC 2012', 'BIRTHDAY NON E-MAIL DEC 2013', 'BIRTHDAY NON E-MAIL DEC 2014', 'BIRTHDAY NON E-MAIL DEC 2015', 'BIRTHDAY NON E-MAIL JAN 2016', 'BIRTHDAY NON E-MAIL JUL 2011', 'BIRTHDAY NON E-MAIL JUL 2014']),
+            'SG/TL'      => $this->sumCells(['I'],                    ['BIRTHDAY'])
+                          + $this->sumCells(['I'],                     'INTERNET     LET CENI2011 BD'),
+            'APP'        => $this->sumCells(['U', 'AC'],              ['BIRTHDAY'])
+        ];
+
+        #12
+        $this->result['INTERNET     SEARCH.MAIL.RU'] = [
+            'prev_SG/TL' => $this->sumCells(['J'],        'INTERNET     SEARCH.MAIL.RU'),
+            'prev_APP'   => $this->sumCells(['V', 'AD'],  'INTERNET     SEARCH.MAIL.RU'),
+            'SG/TL'      => $this->sumCells(['I'],        'INTERNET     SEARCH.MAIL.RU'),
+            'APP'        => $this->sumCells(['U', 'AC'],  'INTERNET     SEARCH.MAIL.RU')
+        ];
+
+        #13 - ...
+        foreach (self::$SINGLE_RESULT_ROWS as $item){
+            $this->result[$item] = [
+                'prev_SG/TL' => '',
+                'prev_APP'   => '',
+                'SG/TL'      => $this->sumCells(['I'],       $item),
+                'APP'        => $this->sumCells(['U', 'AC'], $item)
+            ];
+        }
+
+
+/*
+ * Хуй у меня получилось сэкономить время, содрав формулы автоматом
+ * Если слишколм долго вглядываться в этот отчёт, можно начать писать самому себе в комментах
+
+        // Проходим по всем яйчейкам с православно спизженными из куска xlsx шаблона в виде xml формулами
+        // Те из них, которые можно содрать автоматом, вычисляем
+        for ($i = 13; $i < count(self::$RESULT_CAPTIONS); $i++){ // $RESULT_CAPTIONS нумерация с 0
+            $row = $i + 8;
+            $this->result[self::$RESULT_CAPTIONS[$i]] = [
                 'prev_SG/TL' => isset($this->formulas[$row]['B']) ? $this->sumFormula($this->formulas[$row]['B']) : '',
                 'prev_APP'   => isset($this->formulas[$row]['C']) ? $this->sumFormula($this->formulas[$row]['C']) : '',
                 'SG/TL'      => isset($this->formulas[$row]['E']) ? $this->sumFormula($this->formulas[$row]['E']) : '',
@@ -234,110 +369,122 @@ class Report
             ];
         }
 
-        // Плохая новость в том, что остались ряды, которые нужно собрать вручную, ибо их формулы ссылаются на вышевычисленные
-        // Хорошая в том, что их не 380, а всего 9
+*/
 
+        # Link Exchange
+        $this->result['Link Exchange'] = [
+            'prev_SG/TL' => $this->sumCells(['J'],        'INTERNET     Link Exchange'),
+            'prev_APP'   => $this->sumCells(['V', 'AD'],  'INTERNET     Link Exchange'),
+            'SG/TL'      => $this->sumCells(['I'],        'INTERNET     Link Exchange'),
+            'APP'        => $this->sumCells(['U', 'AC'],  'INTERNET     Link Exchange')
+        ];
+
+
+        // Этот ряд будет вычислен попозжа, пока вставляем его на своё место
+        $this->result['Other channels'] = [
+            'prev_SG/TL' => 0,
+            'prev_APP'   => 0,
+            'SG/TL'      => 0,
+            'APP'        => 0
+        ];
+
+
+        # Unidentified others by phone
+        $this->result['Unidentified others by phone'] = [
+            'prev_SG/TL' =>
+            $this->cell('INFO-LINE', 'I')
+            + $this->cell('INFO-LINE', 'J'),
+
+            'prev_APP' =>
+            $this->cell('INFO-LINE', 'U')
+            + $this->cell('INFO-LINE', 'V')
+            + $this->cell('INFO-LINE', 'AC')
+            + $this->cell('INFO-LINE', 'AD'),
+
+            'SG/TL' =>
+            $this->cell('INFO-LINE', 'I'),
+
+            'APP' =>
+            $this->cell('INFO-LINE', 'U')
+            + $this->cell('INFO-LINE', 'AC')
+        ];
+
+
+        # Unidentified others written
+        $this->result['Unidentified others written'] = [
+            'prev_SG/TL' =>
+            $this->cell('LETTERS', 'I')
+          + $this->cell('LETTERS', 'J'),
+
+            'prev_APP' =>
+            $this->cell('LETTERS', 'U')
+          + $this->cell('LETTERS', 'V')
+          + $this->cell('LETTERS', 'AC')
+          + $this->cell('LETTERS', 'AD'),
+
+            'SG/TL' =>
+            $this->cell('LETTERS', 'I'),
+
+            'APP' =>
+            $this->cell('LETTERS', 'U')
+          + $this->cell('LETTERS', 'AC')
+        ];
 
 
         # Other channels
         // Зависит от Unidentified others by phone и Unidentified others written
         $this->result['Other channels']['prev_SG/TL'] =
-            $this->cell('Total', $this->colIndex('I'))
-            + $this->cell('Total', $this->colIndex('J'))
-            - (
-                $this->result['Print media adverts']              ['prev_SG/TL']
-                + $this->result['Print media inserts']            ['prev_SG/TL']
-                + $this->result['Remails']                        ['prev_SG/TL']
-                + $this->result['Follow up']                      ['prev_SG/TL']
-                + $this->result['Continuation graduates']         ['prev_SG/TL']
-                + $this->result['Internet']                       ['prev_SG/TL']
-                + $this->result['Internet Load']                  ['prev_SG/TL']
-                + $this->result['Telemarketing']                  ['prev_SG/TL']
-                + $this->result['Couriers']                       ['prev_SG/TL']
-                + $this->result['Consultants']                    ['prev_SG/TL']
-                + $this->result['Student-by-Student']             ['prev_SG/TL']
-                + $this->result['Birthday action']                ['prev_SG/TL']
-                + $this->result['Unidentified others by phone']   ['prev_SG/TL']
-                + $this->result['Unidentified others written']    ['prev_SG/TL']
-            );
+            $this->cell('Total', 'I')
+          + $this->cell('Total', 'J')
+        - (
+            $this->result['Print media adverts']            ['prev_SG/TL']
+            + $this->result['Print media inserts']            ['prev_SG/TL']
+            + $this->result['Remails']                        ['prev_SG/TL']
+            + $this->result['Follow up']                      ['prev_SG/TL']
+            + $this->result['Continuation graduates']         ['prev_SG/TL']
+            + $this->result['Internet']                       ['prev_SG/TL']
+            + $this->result['Internet Load']                  ['prev_SG/TL']
+            + $this->result['Telemarketing']                  ['prev_SG/TL']
+            + $this->result['Couriers']                       ['prev_SG/TL']
+            + $this->result['Consultants']                    ['prev_SG/TL']
+            + $this->result['Student-by-Student']             ['prev_SG/TL']
+            + $this->result['Birthday action']                ['prev_SG/TL']
+            + $this->result['Unidentified others by phone']   ['prev_SG/TL']
+            + $this->result['Unidentified others written']    ['prev_SG/TL']
+        );
         $this->result['Other channels']['prev_APP'] =
-            $this->cell('Total', $this->colIndex('U'))
-            + $this->cell('Total', $this->colIndex('V'))
-            + $this->cell('Телеобзвон', $this->colIndex('AC'))
-            + $this->cell('Телеобзвон', $this->colIndex('AD'))
-            - (
-                $this->result['Print media adverts']              ['prev_APP']
-                + $this->result['Print media inserts']            ['prev_APP']
-                + $this->result['Remails']                        ['prev_APP']
-                + $this->result['Follow up']                      ['prev_APP']
-                + $this->result['Continuation graduates']         ['prev_APP']
-                + $this->result['Internet']                       ['prev_APP']
-                + $this->result['Internet Load']                  ['prev_APP']
-                + $this->result['Telemarketing']                  ['prev_APP']
-                + $this->result['Couriers']                       ['prev_APP']
-                + $this->result['Consultants']                    ['prev_APP']
-                + $this->result['Student-by-Student']             ['prev_APP']
-                + $this->result['Birthday action']                ['prev_APP']
-                + $this->result['Unidentified others by phone']   ['prev_APP']
-                + $this->result['Unidentified others written']    ['prev_APP']
-            );
+            $this->cell('Total', 'U')
+          + $this->cell('Total', 'V')
+          + $this->cell('Телеобзвон', 'AC')
+          + $this->cell('Телеобзвон', 'AD')
+        - (
+                $this->result['Print media adverts']            ['prev_APP']
+              + $this->result['Print media inserts']            ['prev_APP']
+              + $this->result['Remails']                        ['prev_APP']
+              + $this->result['Follow up']                      ['prev_APP']
+              + $this->result['Continuation graduates']         ['prev_APP']
+              + $this->result['Internet']                       ['prev_APP']
+              + $this->result['Internet Load']                  ['prev_APP']
+              + $this->result['Telemarketing']                  ['prev_APP']
+              + $this->result['Couriers']                       ['prev_APP']
+              + $this->result['Consultants']                    ['prev_APP']
+              + $this->result['Student-by-Student']             ['prev_APP']
+              + $this->result['Birthday action']                ['prev_APP']
+              + $this->result['Unidentified others by phone']   ['prev_APP']
+              + $this->result['Unidentified others written']    ['prev_APP']
+        );
 
-
-        # Unidentified others by phone
-        $this->result['Unidentified others by phone']['prev_SG/TL'] =
-            $this->cell('INFO-LINE', $this->colIndex('I'))
-            + $this->cell('INFO-LINE', $this->colIndex('J'));
-
-        $this->result['Unidentified others by phone']['prev_APP'] =
-            $this->cell('INFO-LINE', $this->colIndex('U'))
-            + $this->cell('INFO-LINE', $this->colIndex('V'))
-            + $this->cell('INFO-LINE', $this->colIndex('AC'))
-            + $this->cell('INFO-LINE', $this->colIndex('AD'));
-
-        $this->result['Unidentified others by phone']['SG/TL'] =
-            $this->cell('INFO-LINE', $this->colIndex('I'));
-
-        $this->result['Unidentified others by phone']['APP'] =
-            $this->cell('INFO-LINE', $this->colIndex('U'))
-            + $this->cell('INFO-LINE', $this->colIndex('AC'));
-
-
-        # Unidentified others written
-        $this->result['Unidentified others written']['prev_SG/TL'] =
-            $this->cell('LETTERS', $this->colIndex('I'))
-            + $this->cell('LETTERS', $this->colIndex('J'));
-
-        $this->result['Unidentified others written']['prev_APP'] =
-            $this->cell('LETTERS', $this->colIndex('U'))
-            + $this->cell('LETTERS', $this->colIndex('V'))
-            + $this->cell('LETTERS', $this->colIndex('AC'))
-            + $this->cell('LETTERS', $this->colIndex('AD'));
-
-        $this->result['Unidentified others written']['SG/TL'] =
-            $this->cell('LETTERS', $this->colIndex('I'));
-
-        $this->result['Unidentified others written']['APP'] =
-            $this->cell('LETTERS', $this->colIndex('U'))
-            + $this->cell('LETTERS', $this->colIndex('AC'));
-
-
-        //echo array_sum(array_column($this->result, 'SG/TL'));;
-
-        // Должно вычисляться в самую последнюю очередь
+        // Должно вычисляться в самую последнюю очередь, т.к. зависит от кучи предыдущих ячеек
         $this->result['Other channels']['SG/TL'] =
-            $this->cell('Total', $this->colIndex('I'))
-            + self::CELL_I1
-            - array_sum(array_column($this->result, 'SG/TL'));
+            $this->cell('Total', 'I')
+          + self::CELL_I1
+          - array_sum(array_column($this->result, 'SG/TL'));
 
         $this->result['Other channels']['APP'] =
-            $this->cell('Total', $this->colIndex('U'))
-            + $this->cell('Телеобзвон', $this->colIndex('AC'))
-            - array_sum(array_column($this->result, 'APP'));
+            $this->cell('Total', 'U')
+          + $this->cell('Телеобзвон', 'AC')
+          - array_sum(array_column($this->result, 'APP'));
 
-        // prev_SG/TL
-        // prev_APP
-        // SG/TL
-        // APP
 
 
         // Да ну нахуй, нереально. Этот метод никогда не будет дописан до конца... Не верю в это
@@ -350,7 +497,7 @@ class Report
     /**
      * Суммирование выбранных столбцов в диапазоне строк, кроме строк, исключённых из этого диапазона
      * @param array $cols Массив индексов столбцов, которые суммируются
-     * @param array $range Диапазон строк, или массив таких диапазонов
+     * @param string|array $range Диапазон строк, или массив таких диапазонов
      * @param array $keysExcept Массив исключённых из суммирования айдишников
      * @return int
      * @throws BaseException
@@ -366,6 +513,21 @@ class Report
 
         if (!is_array($range) || count($range) == 0) {
             throw new BaseException("Неправильный формат диапазона: " . var_export($range, true));
+        }
+
+        // Если передан массив из одного элемента, это имя группы айдишников, получаем её первый и последний ключ
+        if (is_array($range) && count($range) == 1){
+            if (!isset($this->rowGroups[$range[0]])){
+                throw new BaseException("Неизвестная группа ключей {$range[0]}");
+            }
+            return $this->sumCells(
+                $cols,
+                [
+                    reset($this->rowGroups[$range[0]]),
+                    end($this->rowGroups[$range[0]])
+                ],
+                $keysExcept
+            );
         }
 
         // Если передан массив диапазонов, рекурсивно собираем результат
@@ -404,12 +566,15 @@ class Report
     /**
      * Суммирование выбранных ячеек одного ряда
      * @param string $rowKey Ключ ряда
-     * @param array $cols Массив выбранных столбцов
+     * @param array|int $cols Массив выбранных столбцов, или один столбец
      * @return int
      * @throws BaseException
      */
     public function sumRow($rowKey, $cols)
     {
+        if (!is_array($cols)){
+            return $this->cell($rowKey, $cols);
+        }
         $sum = 0;
         // Проходим по всем заданным столбцам и суммируем ячейки
         foreach ($cols as $col) {
@@ -576,13 +741,14 @@ class Report
                 foreach ($matches[0] as $i => $cl){
                     $col = $matches[1][$i];
                     $row = $matches[2][$i];
-                    if (!isset($this->COLS_INDEXES[$col])){
+                    if (self::hasCol($col)){
                         //throw new BaseException("Столбец '$col' нам неизвестен");
                         continue;
                     }
+
                     $cell = str_replace(
                         $matches[0][$i],
-                        $this->colIndex($col) . self::COL_ROW_DELIMITER . ($row - self::ROW_INDEX_DIFF),
+                        self::colIndex($col) . self::COL_ROW_DELIMITER . ($row - self::ROW_INDEX_DIFF),
                         $cell
                     );
                 }
@@ -627,17 +793,17 @@ class Report
 
     /** Вывод в удобном виде результата */
     public function showResult(){
-        $result = "[\n";
+        $result = '';
         reset(self::$RESULT_CAPTIONS);
         foreach ($this->result as $k => $subArr) {
             $result .= "\t" . Filter::strPad("'$k'", 32) . " => [ ";
             $row = '';
             foreach ($subArr as $key => $cell) {
-                $row .= Filter::strPad("$cell", $key !== 'APP' ? 16 : 3);
+                $row .= Filter::strPad("$cell", $key !== 'APP' ? 12 : 3);
             }
             $result .= "$row],\n";
         }
-        return "$result\n]";
+        return "[\n$result]";
     }
 
 
@@ -649,17 +815,20 @@ class Report
     function showCells($showEmpty = true){
         $result = '';
         foreach ($this->_cells as $k => $v){
-            if ($v[0] !== 0 || $showEmpty) {
+            if ($showEmpty || array_sum($v) !== 0) {
                 $result .= Filter::strPad("'$k'", 32) . " => [ ";
                 $row = '';
                 foreach ($v as $i => $num) {
                     $num .= $i === count($v) - 1 ? '' : ', ';
                     $row .= Filter::strPad("$num", $i === count($v) - 1 ? 2 : 6);
                 }
-                $result .= "$row]\n";
+                $result .= "$row]";
+                if ($k !== 'Total'){
+                    $result .= "\n";
+                }
             }
         }
-        return "[\n$result]";
+        return $result;
     }
 
 
@@ -667,16 +836,29 @@ class Report
 
     /**
      * Числовой индекс столбца
-     * @param string $char
-     * @return int
+     * @param string|array $cols
+     * @return int|array
      * @throws BaseException
      */
-    public function colIndex($char){
-        $char = strtoupper($char);
-        if (!isset($this->COLS_INDEXES[$char])){
-            throw new BaseException("Неизвестный столбец '$char'");
+    public static function colIndex($cols){
+        if (is_array($cols)){
+            return array_map([__CLASS__, 'colIndex'], $cols);
         }
-        return $this->COLS_INDEXES[$char];
+        $cols = strtoupper($cols);
+        if (!isset(self::$COL_INDEXES[$cols])){
+            throw new BaseException("Неизвестный столбец '$cols'");
+        }
+        return self::$COL_INDEXES[$cols];
     }
 
+
+
+    /**
+     * Проверка существования столбца
+     * @param string $col
+     * @return bool
+     */
+    public static function hasCol($col){
+        return isset(self::$COL_INDEXES[$col]);
+    }
 }

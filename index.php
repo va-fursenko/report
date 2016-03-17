@@ -16,7 +16,7 @@ $report = new Report(
     json_decode(file_get_contents(XLS_ROOT . XLS_SECOND), true)
 );
 
-$report->loadFormulas(CONFIG::ROOT . '/data/sheet2.xml');
+//$report->loadFormulas(CONFIG::ROOT . '/data/sheet2.xml');
 
 $report->process();
 /*
@@ -28,7 +28,16 @@ if (preg_match($expr, $el, $matches)){
 */
 
 
+
 // Грузим из файла формулы
-echo "<pre>";
-echo $report->showResult();
-echo "</pre>";
+?>
+<pre class='log-container' style='margin-top:20px; margin-bottom:20px'>
+<?= $report->showResult(); ?>
+</pre>
+
+<pre class="log-header">                                    [ I,    J,    K,    L,    M,    N,    O,    P,    Q,    R,    S,    T,    U,    V,    W,    X,    Y,    Z,   AC,   AD,   AE,   AF,   AG,   AH ]</pre>
+<pre class="log-container" id="logPre">
+<?= $report->showCells(); ?>
+</pre>
+<pre class="log-header">                                    [ I,    J,    K,    L,    M,    N,    O,    P,    Q,    R,    S,    T,    U,    V,    W,    X,    Y,    Z,   AC,   AD,   AE,   AF,   AG,   AH ]</pre>
+
