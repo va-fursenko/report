@@ -10,14 +10,14 @@ BIRTHDAY ACT FRIEND CUR.STUD	         0	         0	         0	         0	       
 BIRTHDAY ACT NON-STARTERS   	         0	         0	         0	         0	         0	         0
 BIRTHDAY AKT E-MAIL DEC 2012	         0	         0	         0	         0	         0	         0
 BIRTHDAY AKT E-MAIL DEC 2014	         0	         0	         0	         0	         0	         0
-BIRTHDAY AKT E-MAIL DEC 2015	         1	         0	         1	         0	         0	         0
+BIRTHDAY AKT E-MAIL DEC 2015	         0	         0	         1	         0	         0	         0
 BIRTHDAY AKT E-MAIL JAN 2016	         0	         0	         0	         0	         0	         0
 BIRTHDAY AKT E-MAIL JUL 2011	         0	         0	         0	         0	         0	         0
 BIRTHDAY AKT E-MAIL SEP 2014	         0	         0	         0	         0	         0	         0
 BIRTHDAY AKT PHONE DEC 2012 	         0	         0	         0	         0	         0	         0
 BIRTHDAY AKT PHONE DEC 2013 	         0	         0	         0	         0	         0	         0
 BIRTHDAY AKT PHONE DEC 2015 	         0	         0	         1	         0	         0	         0
-BIRTHDAY AKT PHONE JAN 2016 	         0	         0	         0	         0	         0	         0
+BIRTHDAY AKT PHONE JAN 2016 	         0	         0	         1	         0	         0	         0
 BIRTHDAY AKT PHONE JUL 2011 	         0	         0	         0	         0	         0	         0
 BIRTHDAY AKT PHONE SEP 2014 	         0	         0	         0	         0	         0	         0
 BIRTHDAY GRA E-MAIL AUG 2011	         0	         0	         0	         0	         0	         0
@@ -41,7 +41,7 @@ BIRTHDAY NON E-MAIL DEC 2012	         0	         0	         0	         0	       
 BIRTHDAY NON E-MAIL DEC 2013	         0	         0	         0	         0	         0	         0
 BIRTHDAY NON E-MAIL DEC 2014	         0	         0	         0	         0	         0	         0
 BIRTHDAY NON E-MAIL DEC 2015	         0	         0	         0	         0	         0	         0
-BIRTHDAY NON E-MAIL JAN 2016	         0	         0	         0	         0	         0	         0
+BIRTHDAY NON E-MAIL JAN 2016	         1	         0	         1	         0	         0	         0
 BIRTHDAY NON E-MAIL JUL 2011	         0	         0	         0	         0	         0	         0
 BIRTHDAY NON E-MAIL JUL 2014	         0	         0	         0	         0	         0	         0
 BOOK CLUB                   	         0	         0	         0	         0	         0	         0
@@ -51,8 +51,8 @@ CERT DB MAIL                	         0	         0	         0	         0	       
 CONSULTANTS                 	         0	         0	         0	         0	         0	         0
 CONSULTANTS  INTERNET       	         0	         0	         0	         0	         0	         0
 CONTIN.GRAD. B/W LETTER     	         0	         0	         0	         0	         0	         0
-CONTIN.GRAD. CARD IN LAST SH	        20	         0	        65	         0	         0	         0
-CONTIN.GRAD. COLOR LETT     	         5	         0	        13	         0	         0	         0
+CONTIN.GRAD. CARD IN LAST SH	         2	         0	        72	         0	         0	         0
+CONTIN.GRAD. COLOR LETT     	         1	         0	        18	         0	         0	         0
 COURIER                     	         0	         0	         0	         0	         0	         0
 COURIER      AUTUMN2005     	         0	         0	         0	         0	         0	         0
 COURIER      AUTUMN2006     	         0	         0	         0	         0	         0	         0
@@ -190,9 +190,9 @@ INTERNET     1APRIL 2014    	         0	         0	         0	         0	       
 INTERNET     1APRIL_2 2014  	         0	         0	         0	         0	         0	         0
 INTERNET     1april 1 04.15 	         0	         0	         0	         0	         0	         0
 INTERNET     1april 2 04.15 	         0	         0	         0	         0	         0	         0
-INTERNET     23 FEBR 02.16  	         1	         0	         1	         0	         0	         0
-INTERNET     23 FEBR_1 02.16	         1	         0	         1	         0	         0	         0
-INTERNET     23 FEBR_2 02.16	         1	         0	         1	         0	         0	         0
+INTERNET     23 FEBR 02.16  	         0	         0	         2	         0	         0	         0
+INTERNET     23 FEBR_1 02.16	         0	         0	         1	         0	         0	         0
+INTERNET     23 FEBR_2 02.16	         0	         0	         7	         0	         0	         0
 INTERNET     23 FEVRALIA2012	         0	         0	         0	         0	         0	         0
 INTERNET     23FEV SITE 13  	         0	         0	         0	         0	         0	         0
 INTERNET     23FEV TM 13    	         0	         0	         0	         0	         0	         0
@@ -313,13 +313,13 @@ INTERNET     580 VK         	         0	         0	         0	         0	       
 INTERNET     580_1 06.15    	         0	         0	         0	         0	         0	         0
 INTERNET     580_2 06.15    	         0	         0	         0	         0	         0	         0
 INTERNET     580_3 07.15    	         0	         0	         0	         0	         0	         0
-INTERNET     599 02.2016    	         0	         0	         0	         0	         0	         0
-INTERNET     599_01 02.2016 	         0	         0	         0	         0	         0	         0
+INTERNET     599 02.2016    	         0	         0	         4	         0	         0	         0
+INTERNET     599_01 02.2016 	         0	         0	         3	         0	         0	         0
 INTERNET     5BALLOV JAN09  	         0	         0	         0	         0	         0	         0
 INTERNET     5BALLOV OCT08 1	         0	         0	         0	         0	         0	         0
 INTERNET     5BALLOV SEP08 1	         0	         0	         0	         0	         0	         0
 INTERNET     5BALLOV SEP08 2	         0	         0	         0	         0	         0	         0
-INTERNET     7OFFERS 12.15  	         1	         0	         1	         0	         0	         0
+INTERNET     7OFFERS 12.15  	         0	         0	         2	         0	         0	         0
 INTERNET     7offers.ru05.15	         0	         0	         0	         0	         0	         0
 INTERNET     7offers.ru06.15	         0	         0	         0	         0	         0	         0
 INTERNET     7offers.ru07.15	         0	         0	         0	         0	         0	         0
@@ -333,6 +333,9 @@ INTERNET     81234_other    	         0	         0	         0	         0	       
 INTERNET     81235_other    	         0	         0	         0	         0	         0	         0
 INTERNET     8MART S 1 03.15	         0	         0	         0	         0	         0	         0
 INTERNET     8MART S 2 03.15	         0	         0	         0	         0	         0	         0
+INTERNET     8_MARTA 03.16  	         0	         0	         0	         0	         0	         0
+INTERNET     8_MARTA_1 03.16	         3	         0	         3	         0	         0	         0
+INTERNET     8_MARTA_2 03.16	         3	         0	         3	         0	         0	         0
 INTERNET     9 MAY 05.15    	         0	         0	         0	         0	         0	         0
 INTERNET     ACTION ACT     	         0	         0	         0	         0	         0	         0
 INTERNET     ACTION ACT10813	         0	         0	         0	         0	         0	         0
@@ -350,7 +353,7 @@ INTERNET     ACTPAY JAP 2014	         0	         0	         0	         0	       
 INTERNET     ACTPAY KRA 2014	         0	         0	         0	         0	         0	         0
 INTERNET     ACTPAY LANG2014	         0	         0	         0	         0	         0	         0
 INTERNET     ACTPAY POL 2014	         0	         0	         0	         0	         0	         0
-INTERNET     AC_AH_PK 02.16 	        10	         0	        10	         0	         0	         0
+INTERNET     AC_AH_PK 02.16 	         0	         0	        10	         0	         0	         0
 INTERNET     AD LABS 1      	         0	         0	         0	         0	         0	         0
 INTERNET     AD LABS 2      	         0	         0	         0	         0	         0	         0
 INTERNET     ADVERTSTAR 1213	         0	         0	         0	         0	         0	         0
@@ -376,7 +379,7 @@ INTERNET     ANGL KURS1 0515	         0	         0	         0	         0	       
 INTERNET     ANGL_EXT_08.15 	         0	         0	         0	         0	         0	         0
 INTERNET     ANGL_EXT_09.15 	         0	         0	         0	         0	         0	         0
 INTERNET     ANG_599 12.15  	         0	         0	         0	         0	         0	         0
-INTERNET     ANG_599_1 12.15	         0	         1	         0	         1	         0	         0
+INTERNET     ANG_599_1 12.15	         0	         0	         0	         1	         0	         0
 INTERNET     ANG_599_2 12.15	         0	         0	         0	         0	         0	         0
 INTERNET     ANG_599_3 12.15	         0	         0	         0	         0	         0	         0
 INTERNET     ANNAB NY       	         0	         0	         0	         0	         0	         0
@@ -451,7 +454,7 @@ INTERNET     BIREMAIL DEC123	         0	         0	         0	         0	       
 INTERNET     BIRTH TM DEC 12	         0	         0	         0	         0	         0	         0
 INTERNET     BIZNES 10.15   	         0	         0	         0	         0	         0	         0
 INTERNET     BIZNES K 05.15 	         0	         0	         0	         0	         0	         0
-INTERNET     BIZNES_K 02.16 	         1	         0	         1	         0	         0	         0
+INTERNET     BIZNES_K 02.16 	         0	         0	         1	         0	         0	         0
 INTERNET     BLACK FRI111.15	         0	         0	         0	         0	         0	         0
 INTERNET     BLACK FRI211.15	         0	         0	         0	         0	         0	         0
 INTERNET     BUBIGATOR 04.15	         0	         0	         0	         0	         0	         0
@@ -482,6 +485,7 @@ INTERNET     CAREER 01.15   	         0	         0	         0	         0	       
 INTERNET     CAREER 01.16   	         0	         0	         2	         0	         0	         0
 INTERNET     CAREER 02.16   	         0	         0	         0	         0	         0	         0
 INTERNET     CAREER 03.15   	         0	         0	         0	         0	         0	         0
+INTERNET     CAREER 03.2016 	         0	         0	         0	         0	         0	         0
 INTERNET     CAREER 06.14   	         0	         0	         0	         0	         0	         0
 INTERNET     CAREER 08.12   	         0	         0	         0	         0	         0	         0
 INTERNET     CAREER 09.12   	         0	         0	         0	         0	         0	         0
@@ -577,6 +581,7 @@ INTERNET     DESIGN 02.15   	         0	         0	         0	         0	       
 INTERNET     DESIGN 12.14   	         0	         0	         0	         0	         0	         0
 INTERNET     DESIGN INT 0414	         0	         0	         0	         0	         0	         0
 INTERNET     DESIGNS 01.15  	         0	         0	         0	         0	         0	         0
+INTERNET     DESIGN_K 03.16 	         0	         0	         3	         0	         0	         0
 INTERNET     DESIN KURS06.15	         0	         0	         0	         0	         0	         0
 INTERNET     DGOB-M 1 MAR.09	         0	         0	         0	         0	         0	         0
 INTERNET     DGOB-M 2 MAR.09	         0	         0	         0	         0	         0	         0
@@ -584,7 +589,7 @@ INTERNET     DIRADVERT 05.14	         0	         0	         0	         0	       
 INTERNET     DIRTY          	         0	         0	         0	         0	         0	         0
 INTERNET     DIS KURS 04.15 	         0	         0	         0	         0	         0	         0
 INTERNET     DIS_KURIER09.15	         0	         0	         0	         0	         0	         0
-INTERNET     DIS_KURS 02.16 	         1	         0	         1	         0	         0	         0
+INTERNET     DIS_KURS 02.16 	         0	         0	         1	         0	         0	         0
 INTERNET     DIZ 06.14      	         0	         0	         0	         0	         0	         0
 INTERNET     DIZ 07.14      	         0	         0	         0	         0	         0	         0
 INTERNET     DIZAIN 09.14   	         0	         0	         0	         0	         0	         0
@@ -908,7 +913,7 @@ INTERNET     FACEBOOK07.2012	         0	         0	         0	         0	       
 INTERNET     FACE_PK_09.15  	         0	         0	         0	         0	         0	         0
 INTERNET     FACE_SMM_2014  	         0	         0	         0	         0	         0	         0
 INTERNET     FACE_SMM_NY2014	         0	         0	         0	         0	         0	         0
-INTERNET     FB_SMM_NY2014  	        10	         0	        10	         0	         0	         0
+INTERNET     FB_SMM_NY2014  	         0	         0	        16	         0	         0	         0
 INTERNET     FOTO 02.15     	         0	         0	         0	         0	         0	         0
 INTERNET     FOTO 05.14     	         0	         0	         0	         0	         0	         0
 INTERNET     FOTO 10.14     	         0	         0	         0	         0	         0	         0
@@ -950,14 +955,14 @@ INTERNET     GOOGLE TEST PAG	         0	         0	         0	         0	       
 INTERNET     GOOGLE TEXT    	         0	         0	         0	         0	         0	         0
 INTERNET     GOOGLE TExt    	         0	         0	         0	         0	         0	         0
 INTERNET     GOOGLE TX 03.11	         0	         0	         0	         0	         0	         0
-INTERNET     GOOGLE WINTER14	         7	         0	        18	         0	         0	         0
+INTERNET     GOOGLE WINTER14	         2	         0	        21	         0	         0	         0
 INTERNET     GOOGLE+_SMM_14 	         0	         0	         0	         0	         0	         0
 INTERNET     GOOGLEADWORD 1 	         0	         0	         0	         0	         0	         0
 INTERNET     GOOGLEADWORD 2 	         0	         0	         0	         0	         0	         0
-INTERNET     GOOGLEADWORDS1 	         1	         0	         1	         0	         0	         0
+INTERNET     GOOGLEADWORDS1 	         0	         0	         1	         0	         0	         0
 INTERNET     GOOGLEADWORDS2 	         0	         0	         0	         0	         0	         0
 INTERNET     GOOGLE_PK_09.15	         0	         0	         0	         0	         0	         0
-INTERNET     GOOGL_ADD 12.15	         1	         0	         7	         0	         0	         0
+INTERNET     GOOGL_ADD 12.15	         1	         0	         9	         0	         0	         0
 INTERNET     GOOGL_ADD112.15	         0	         0	         0	         0	         0	         0
 INTERNET     GOOGL_ADD212.15	         0	         0	         0	         0	         0	         0
 INTERNET     GOOGL_ADD312.15	         0	         0	         0	         0	         0	         0
@@ -1104,12 +1109,12 @@ INTERNET     HPWEEK_PK210.15	         0	         0	         0	         0	       
 INTERNET     HPWEEK_T 12.15 	         0	         0	         0	         0	         0	         0
 INTERNET     HPWEEK_T112.15 	         0	         0	         0	         1	         0	         0
 INTERNET     HPWEEK_T212.15 	         0	         0	         0	         0	         0	         0
-INTERNET     HP_NY 01.16    	         1	         0	         3	         0	         0	         0
-INTERNET     HP_WEEK 02.16  	         5	         0	         5	         0	         0	         0
+INTERNET     HP_NY 01.16    	         0	         0	         3	         0	         0	         0
+INTERNET     HP_WEEK 02.16  	         0	         0	         5	         0	         0	         0
 INTERNET     HP_WEEK 12.15  	         0	         0	         0	         0	         0	         0
-INTERNET     HP_WEEK_1 02.16	         8	         0	         8	         0	         0	         0
+INTERNET     HP_WEEK_1 02.16	         0	         0	        10	         0	         0	         0
 INTERNET     HP_WEEK_1 12.15	         0	         0	         0	         0	         0	         0
-INTERNET     HP_WEEK_2 02.16	         3	         0	         3	         0	         0	         0
+INTERNET     HP_WEEK_2 02.16	         0	         0	         5	         0	         0	         0
 INTERNET     HP_WEEK_2 12.15	         0	         0	         0	         1	         0	         0
 INTERNET     HTML LETTE     	         0	         0	         0	         0	         0	         0
 INTERNET     HTML LETTE1    	         0	         0	         0	         0	         0	         0
@@ -1259,6 +1264,8 @@ INTERNET     KURSDNYA02.12 1	         0	         0	         0	         0	       
 INTERNET     KURSDNYA02.12 2	         0	         0	         0	         0	         0	         0
 INTERNET     KURSI KRAS03.14	         0	         0	         0	         0	         0	         0
 INTERNET     KURSI KRAS06.14	         0	         0	         0	         0	         0	         0
+INTERNET     KURS_DNYA 03.16	         0	         0	         0	         0	         0	         0
+INTERNET     KURS_D_PK 03.16	         0	         0	         0	         0	         0	         0
 INTERNET     KnowDay 2013   	         0	         0	         0	         0	         0	         0
 INTERNET     KnowDay_TM1 13 	         0	         0	         0	         0	         0	         0
 INTERNET     KnowDay_TM2 13 	         0	         0	         0	         0	         0	         0
@@ -1301,7 +1308,7 @@ INTERNET     LANG_KURS 01.16	         0	         0	         1	         0	       
 INTERNET     LANG_K_1 01.16 	         0	         0	         1	         0	         0	         0
 INTERNET     LANG_K_1 02.16 	         0	         0	         0	         0	         0	         0
 INTERNET     LANG_K_2 01.16 	         0	         0	         0	         0	         0	         0
-INTERNET     LANG_K_2 02.16 	         2	         0	         2	         0	         0	         0
+INTERNET     LANG_K_2 02.16 	         0	         0	         2	         0	         0	         0
 INTERNET     LAN_580_1 09.15	         0	         0	         0	         0	         0	         0
 INTERNET     LAN_580_2 09.15	         0	         0	         0	         0	         0	         0
 INTERNET     LET CENI2011 BD	         0	         0	         0	         0	         0	         0
@@ -1424,7 +1431,7 @@ INTERNET     NEWPRIZE 2 0814	         0	         0	         0	         0	       
 INTERNET     NEWS LETTER1014	         0	         0	         0	         0	         0	         0
 INTERNET     NEWSLETT 02.15 	         0	         0	         0	         0	         0	         0
 INTERNET     NEWSLETT 09.14 	         0	         0	         0	         0	         0	         0
-INTERNET     NEW_PRIZ 02.16 	         2	         0	         2	         0	         0	         0
+INTERNET     NEW_PRIZ 02.16 	         0	         0	         2	         0	         0	         0
 INTERNET     NEW_PRIZE 11.15	         0	         0	         0	         0	         0	         0
 INTERNET     NEW_PRIZ_109.15	         0	         0	         0	         0	         0	         0
 INTERNET     NINAR NY       	         0	         0	         0	         0	         0	         0
@@ -1466,11 +1473,11 @@ INTERNET     NOT AN_RE      	         0	         0	         0	         0	       
 INTERNET     NO_450 11.15   	         0	         0	         0	         0	         0	         0
 INTERNET     NO_ANG 12.15   	         0	         0	         0	         0	         0	         0
 INTERNET     NO_CHILD 10.15 	         0	         0	         0	         0	         0	         0
-INTERNET     NO_LANG 01.16  	         1	         0	         1	         0	         0	         0
+INTERNET     NO_LANG 01.16  	         0	         0	         1	         0	         0	         0
 INTERNET     NO_LANG 11.15  	         0	         0	         0	         0	         0	         0
 INTERNET     NO_PK 01.16    	         0	         0	         0	         0	         0	         0
 INTERNET     NO_PK 02.16    	         0	         0	         0	         0	         0	         0
-INTERNET     N_YEAR_G 12.15 	         0	         0	         0	        21	         0	         0
+INTERNET     N_YEAR_G 12.15 	         0	         1	         0	        22	         0	         0
 INTERNET     N_YEAR_S 12.15 	         0	         0	         0	         6	         0	         0
 INTERNET     Non-start_1    	         0	         0	         0	         0	         0	         0
 INTERNET     Non-start_1_re 	         0	         0	         0	         0	         0	         0
@@ -1494,6 +1501,7 @@ INTERNET     Otkazniki_1    	         0	         0	         0	         0	       
 INTERNET     Otkazniki_2    	         0	         0	         0	         0	         0	         0
 INTERNET     Otkazniki_3    	         0	         0	         0	         0	         0	         0
 INTERNET     PAK DIS 08.15  	         0	         0	         0	         0	         0	         0
+INTERNET     PARIK_KURS 0316	         1	         0	         1	         0	         0	         0
 INTERNET     PARK DIS 04.15 	         0	         0	         0	         0	         0	         0
 INTERNET     PARKDIS 03.15  	         0	         0	         0	         0	         0	         0
 INTERNET     PASCHA 1 04.15 	         0	         0	         0	         0	         0	         0
@@ -1504,7 +1512,7 @@ INTERNET     PASSION BAN    	         0	         0	         0	         0	       
 INTERNET     PEREVOD  09.15 	         0	         0	         0	         0	         0	         0
 INTERNET     PEREVOD_109.15 	         0	         0	         0	         0	         0	         0
 INTERNET     PK 01.16       	         0	         0	        13	         0	         0	         0
-INTERNET     PK_1 01.16     	         1	         0	         6	         0	         0	         0
+INTERNET     PK_1 01.16     	         0	         0	         6	         0	         0	         0
 INTERNET     POBEDA 11.14   	         0	         0	         0	         0	         0	         0
 INTERNET     POLKURSA 10.15 	         0	         0	         0	         0	         0	         0
 INTERNET     POLKURS_1 10.15	         0	         0	         0	         0	         0	         0
@@ -1532,7 +1540,8 @@ INTERNET     PSIHOL 07.14   	         0	         0	         0	         0	       
 INTERNET     PSIHOLOG 01.15 	         0	         0	         0	         0	         0	         0
 INTERNET     PSIHOLOGY 09.14	         0	         0	         0	         0	         0	         0
 INTERNET     PSYCHKURS 06.15	         0	         0	         0	         0	         0	         0
-INTERNET     PSYCHOLOG 01.16	         1	         0	         1	         0	         0	         0
+INTERNET     PSYCHOLOG 01.16	         0	         0	         1	         0	         0	         0
+INTERNET     PSYCH_KURS 0316	         1	         0	         1	         0	         0	         0
 INTERNET     PSYHOLOG 09.15 	         0	         0	         0	         0	         0	         0
 INTERNET     Perevod  1_2013	         0	         0	         0	         0	         0	         0
 INTERNET     Perevod  2_2013	         0	         0	         0	         0	         0	         0
@@ -1580,7 +1589,7 @@ INTERNET     RAMBL.HOR.FEB10	         0	         0	         0	         0	       
 INTERNET     RAMBL.HOR.JAN09	         0	         0	         0	         0	         0	         0
 INTERNET     RAMBL.HOR.SEP08	         0	         0	         0	         0	         0	         0
 INTERNET     RAMBLER LETO 13	         0	         0	         0	         0	         0	         0
-INTERNET     RAMBLER WINT 14	         0	         0	         2	         0	         0	         0
+INTERNET     RAMBLER WINT 14	         0	         0	         3	         0	         0	         0
 INTERNET     RAS.MAIL.RU    	         0	         0	         0	         0	         0	         0
 INTERNET     RE-EMAIL 2013  	         0	         0	         0	         0	         0	         0
 INTERNET     RE-EMAIL-01    	         0	         0	         0	         0	         0	         0
@@ -1601,9 +1610,9 @@ INTERNET     REMAIL OLD 13  	         0	         0	         0	         0	       
 INTERNET     RESTS13 02.15  	         0	         0	         0	         0	         0	         0
 INTERNET     RESTS14 02.15  	         0	         0	         0	         0	         0	         0
 INTERNET     RISE_PRICE 0216	         0	         0	         0	         0	         0	         0
-INTERNET     RM 0           	         1	         0	         3	         0	         0	         0
-INTERNET     RM 1           	         1	         0	         2	         0	         0	         0
-INTERNET     RM 2           	         0	         0	         6	         0	         0	         0
+INTERNET     RM 0           	         0	         0	         3	         0	         0	         0
+INTERNET     RM 1           	         0	         0	         2	         0	         0	         0
+INTERNET     RM 2           	         2	         0	         8	         0	         0	         0
 INTERNET     RM01_MAY_TM 13 	         0	         0	         0	         0	         0	         0
 INTERNET     RM02_MAY_TM 13 	         0	         0	         0	         0	         0	         0
 INTERNET     RM03_MAY_TM 13 	         0	         0	         0	         0	         0	         0
@@ -1656,7 +1665,7 @@ INTERNET     SIBNET 09.12   	         0	         0	         0	         0	       
 INTERNET     SITE 2014      	         0	         0	         0	         0	         0	         0
 INTERNET     SITE AUT 14    	         0	         0	         0	         0	         0	         0
 INTERNET     SITE DEN ULYBOK	         0	         0	         0	         0	         0	         0
-INTERNET     SITE JAN 16    	        15	         0	        16	         0	         0	         0
+INTERNET     SITE JAN 16    	         3	         0	        26	         0	         0	         0
 INTERNET     SITE NOW 14    	         0	         0	         0	         0	         0	         0
 INTERNET     SITE NY 15     	         0	         0	         0	         0	         0	         0
 INTERNET     SITE WIN 01.15 	         0	         0	         0	         0	         0	         0
@@ -1666,7 +1675,7 @@ INTERNET     SITE WIN15 FEB 	         0	         0	         0	         0	       
 INTERNET     SITE WIN15 JUL 	         0	         0	         1	         0	         0	         0
 INTERNET     SITE WIN15 JUN 	         0	         0	         0	         0	         0	         0
 INTERNET     SITE WIN15 MAR 	         0	         0	         0	         0	         0	         0
-INTERNET     SITE WIN_2016  	         2	         0	        20	         0	         0	         0
+INTERNET     SITE WIN_2016  	         0	         0	        21	         0	         0	         0
 INTERNET     SITE_KN_D 2015 	         0	         0	         0	         0	         0	         0
 INTERNET     SITE_NEWYEA2014	         0	         0	         0	         0	         0	         0
 INTERNET     SK ZHIZ 07.12 1	         0	         0	         0	         0	         0	         0
@@ -1701,11 +1710,11 @@ INTERNET     STUD BY STUD   	         0	         0	         0	         0	       
 INTERNET     STUD BY STUDF16	         0	         0	         0	         0	         0	         0
 INTERNET     STUD BY STUDW15	         0	         0	         1	         0	         0	         0
 INTERNET     STUD BY STUDW16	         0	         0	         0	         0	         0	         0
-INTERNET     STUD_DAY 01.16 	         3	         0	         5	         0	         0	         0
+INTERNET     STUD_DAY 01.16 	         0	         0	         5	         0	         0	         0
 INTERNET     STUD_DAY 11.15 	         0	         0	         0	         0	         0	         0
 INTERNET     STUD_DAY111.15 	         0	         0	         0	         0	         0	         0
-INTERNET     STUD_DAY_1 1.16	         6	         0	         6	         0	         0	         0
-INTERNET     STUD_DAY_2 1.16	         2	         0	         2	         0	         0	         0
+INTERNET     STUD_DAY_1 1.16	         0	         0	         6	         0	         0	         0
+INTERNET     STUD_DAY_2 1.16	         0	         0	         2	         0	         0	         0
 INTERNET     SUB LINK       	         0	         0	         0	         0	         0	         0
 INTERNET     SUB MINIBAN    	         0	         0	         0	         0	         0	         0
 INTERNET     SUB TL 11.14   	         0	         0	         0	         0	         0	         0
@@ -1811,7 +1820,7 @@ INTERNET     TL LETTER2 0115	         0	         0	         0	         0	       
 INTERNET     TM 45 NOV 13   	         0	         0	         0	         0	         0	         0
 INTERNET     TM 50 NOV 13   	         0	         0	         0	         0	         0	         0
 INTERNET     TM AUT 14      	         0	         0	         0	         0	         0	         0
-INTERNET     TM CC NY16     	         1	         0	         9	         0	         0	         0
+INTERNET     TM CC NY16     	         0	         0	        10	         0	         0	         0
 INTERNET     TM DEC 2013    	         0	         0	         0	         0	         0	         0
 INTERNET     TM DEN ULYBOK  	         0	         0	         0	         0	         0	         0
 INTERNET     TM DZ 14       	         0	         0	         0	         0	         0	         0
@@ -1838,7 +1847,7 @@ INTERNET     UCHEBA.RU NY15 	         0	         0	         0	         0	       
 INTERNET     ULIBKA 2014    	         0	         0	         0	         0	         0	         0
 INTERNET     VESTA DVD 03 13	         0	         0	         0	         0	         0	         0
 INTERNET     VESTA NDVD 0313	         0	         0	         0	         0	         0	         0
-INTERNET     VISAGIST_K02.16	         0	         0	         0	         0	         0	         0
+INTERNET     VISAGIST_K02.16	         0	         0	         3	         0	         0	         0
 INTERNET     VIZAGST 03.15  	         0	         0	         0	         0	         0	         0
 INTERNET     VK 03.2012     	         0	         0	         0	         0	         0	         0
 INTERNET     VK BIRTHDAY    	         0	         0	         0	         0	         0	         0
@@ -1878,7 +1887,7 @@ INTERNET     YANDEX 11.09   	         0	         0	         0	         0	       
 INTERNET     YANDEX BANNER  	         0	         0	         0	         0	         0	         0
 INTERNET     YANDEX DIR06.15	         0	         0	         0	         0	         0	         0
 INTERNET     YANDEX DIRECT  	         0	         0	         0	         0	         0	         0
-INTERNET     YANDEX DIRECT 1	         4	         0	         7	         0	         0	         0
+INTERNET     YANDEX DIRECT 1	         3	         0	        10	         0	         0	         0
 INTERNET     YANDEX DIRECT 2	         0	         0	         0	         0	         0	         0
 INTERNET     YANDEX DIRECT01	         0	         0	         0	         0	         0	         0
 INTERNET     YANDEX DIRECT02	         0	         0	         0	         0	         0	         0
@@ -1908,7 +1917,7 @@ INTERNET     YANDEX DIRECT7 	         0	         0	         0	         0	       
 INTERNET     YANDEX DIRECT8 	         0	         0	         0	         0	         0	         0
 INTERNET     YANDEX LETO 13 	         0	         0	         0	         0	         0	         0
 INTERNET     YANDEX TEXT    	         0	         0	         0	         0	         0	         0
-INTERNET     YANDEX WINT2014	         1	         0	        27	         0	         0	         0
+INTERNET     YANDEX WINT2014	         0	         0	        27	         0	         0	         0
 INTERNET     YANDEXDIR106.15	         0	         0	         0	         0	         0	         0
 INTERNET     YANDEX_A 12.15 	         0	         0	         0	         0	         0	         0
 INTERNET     YULIYAT NY     	         0	         0	         0	         0	         0	         0
@@ -1957,7 +1966,7 @@ INTERNET     eGenetic 07.15 	         0	         0	         0	         0	       
 INTERNET     eGentic 03.15  	         0	         0	         0	         0	         0	         0
 INTERNET     eng_extra_10.13	         0	         0	         0	         0	         0	         0
 INTERNET     eng_extra_11.13	         0	         0	         0	         0	         0	         0
-INTERNET     get4Click 01.16	         7	         0	         7	         0	         0	         0
+INTERNET     get4Click 01.16	         3	         0	        13	         0	         0	         0
 INTERNET     get4Click 07.15	         0	         0	         8	         0	         0	         0
 INTERNET     get4click 03.15	         0	         0	         0	         0	         0	         0
 INTERNET     goroskop 11.13 	         0	         0	         0	         0	         0	         0
@@ -2001,7 +2010,7 @@ PHONE        ALEKSANDRAV F15	         0	         0	         0	         0	       
 PHONE        ALEKSANDRAV HW 	         0	         0	         0	         0	         0	         0
 PHONE        ALEKSANDRAV KD 	         0	         0	         2	         0	         0	         0
 PHONE        ALEKSANDRAV W15	         0	         0	         1	         0	         0	         0
-PHONE        ALEKSANDRAV W16	         1	         0	         1	         0	         0	         0
+PHONE        ALEKSANDRAV W16	         0	         0	         1	         0	         0	         0
 PHONE        ALINACH F15    	         0	         0	         0	         0	         0	         0
 PHONE        ALINACH W15    	         0	         0	         0	         0	         0	         0
 PHONE        ANG2_ECDl10915 	         0	         0	         0	         0	         0	         0
@@ -2009,7 +2018,7 @@ PHONE        ANNAB F15      	         0	         0	         0	         0	       
 PHONE        ANNAB HW       	         0	         0	         0	         0	         0	         0
 PHONE        ANNAB KD       	         0	         0	         0	         0	         0	         0
 PHONE        ANNAB W15      	         0	         0	         0	         0	         0	         0
-PHONE        ANNAB W16      	         0	         0	         0	         0	         0	         0
+PHONE        ANNAB W16      	         1	         0	         1	         0	         0	         0
 PHONE        AleksandraV 450	         0	         0	         0	         0	         0	         0
 PHONE        AleksandraV 580	         0	         0	         0	         0	         0	         0
 PHONE        AleksandraV KD 	         0	         0	         0	         0	         0	         0
@@ -2028,12 +2037,12 @@ PHONE        ILYANAP F15    	         0	         0	         0	         0	       
 PHONE        ILYANAP HW     	         0	         0	         0	         0	         0	         0
 PHONE        ILYANAP KD     	         0	         0	         0	         0	         0	         0
 PHONE        ILYANAP W15    	         0	         0	         0	         0	         0	         0
-PHONE        ILYANAP W16    	         8	         0	         8	         0	         0	         0
+PHONE        ILYANAP W16    	         0	         0	         9	         0	         0	         0
 PHONE        IRINASH F15    	         0	         0	         0	         0	         0	         0
 PHONE        IRINASH HW     	         0	         0	         0	         0	         0	         0
 PHONE        IRINASH KD     	         0	         0	         0	         0	         0	         0
 PHONE        IRINASH W15    	         0	         0	         0	         0	         0	         0
-PHONE        IRINASH W16    	         1	         0	         1	         0	         0	         0
+PHONE        IRINASH W16    	         0	         0	         1	         0	         0	         0
 PHONE        IlyanaP 450    	         0	         0	         0	         0	         0	         0
 PHONE        IlyanaP 580    	         0	         0	         0	         0	         0	         0
 PHONE        IlyanaP HW     	         0	         0	         0	         0	         0	         0
@@ -2046,7 +2055,7 @@ PHONE        JULIAD F15     	         0	         0	         0	         0	       
 PHONE        JULIAD HW      	         0	         0	         0	         0	         0	         0
 PHONE        JULIAD KD      	         0	         0	         0	         0	         0	         0
 PHONE        JULIAD W15     	         0	         0	         0	         0	         0	         0
-PHONE        JULIAD W16     	         2	         0	         2	         0	         0	         0
+PHONE        JULIAD W16     	         0	         0	         2	         0	         0	         0
 PHONE        Julia KD       	         0	         0	         0	         0	         0	         0
 PHONE        JuliaD 450     	         0	         0	         0	         0	         0	         0
 PHONE        JuliaD 580     	         0	         0	         0	         0	         0	         0
@@ -2060,12 +2069,12 @@ PHONE        LUDMILAD F15   	         0	         0	         0	         0	       
 PHONE        LUDMILAD HW    	         0	         0	         0	         0	         0	         0
 PHONE        LUDMILAD KD    	         0	         0	         0	         0	         0	         0
 PHONE        LUDMILAD W15   	         0	         0	         1	         0	         0	         0
-PHONE        LYDMALAD W16   	         1	         0	         1	         0	         0	         0
+PHONE        LYDMALAD W16   	         0	         0	         1	         0	         0	         0
 PHONE        LYDMILAC HW    	         0	         0	         0	         0	         0	         0
 PHONE        LYDMILAC KD    	         0	         0	         0	         0	         0	         0
-PHONE        LYDMILAC W16   	         3	         0	         3	         0	         0	         0
+PHONE        LYDMILAC W16   	         1	         0	         4	         0	         0	         0
 PHONE        LYDMILAG KD    	         0	         0	         0	         0	         0	         0
-PHONE        LYDMILAG W16   	         4	         0	         4	         0	         0	         0
+PHONE        LYDMILAG W16   	         0	         0	         4	         0	         0	         0
 PHONE        LYUDMILAC F15  	         0	         0	         0	         0	         0	         0
 PHONE        LYUDMILAC W15  	         0	         0	         0	         0	         0	         0
 PHONE        LYUDMILAG F15  	         0	         0	         0	         0	         0	         0
@@ -2108,7 +2117,7 @@ PHONE        SVETA KD       	         0	         0	         0	         0	       
 PHONE        SVETAD F15     	         0	         0	         0	         0	         0	         0
 PHONE        SVETAD HW      	         0	         0	         0	         0	         0	         0
 PHONE        SVETAD W15     	         0	         0	         0	         0	         0	         0
-PHONE        SVETAD W16     	         1	         0	         1	         0	         0	         0
+PHONE        SVETAD W16     	         0	         0	         1	         0	         0	         0
 PHONE        SvetaD 450     	         0	         0	         0	         0	         0	         0
 PHONE        SvetaD 580     	         0	         0	         0	         0	         0	         0
 PHONE        SvetaD HW      	         0	         0	         0	         0	         0	         0
@@ -2117,7 +2126,7 @@ PHONE        TAMARAV F15    	         0	         0	         0	         0	       
 PHONE        TAMARAV HW     	         0	         0	         0	         0	         0	         0
 PHONE        TAMARAV KD     	         0	         0	         0	         0	         0	         0
 PHONE        TAMARAV W15    	         0	         0	         1	         0	         0	         0
-PHONE        TAMARAV W16    	         2	         0	         2	         0	         0	         0
+PHONE        TAMARAV W16    	         0	         0	         3	         0	         0	         0
 PHONE        TATYANAS F15   	         0	         0	         0	         0	         0	         0
 PHONE        TATYANAS HW    	         0	         0	         0	         0	         0	         0
 PHONE        TATYANAS KD    	         0	         0	         0	         0	         0	         0
@@ -2152,7 +2161,7 @@ PHONE        ZINAIDAE F15   	         0	         0	         0	         0	       
 PHONE        ZINAIDAE HW    	         0	         0	         0	         0	         0	         0
 PHONE        ZINAIDAE KD    	         0	         0	         0	         0	         0	         0
 PHONE        ZINAIDAE W15   	         0	         0	         1	         0	         0	         0
-PHONE        ZINAIDE W16    	         0	         0	         0	         0	         0	         0
+PHONE        ZINAIDE W16    	         0	         0	         1	         0	         0	         0
 PHONE        ZinaidaE 450   	         0	         0	         0	         0	         0	         0
 PHONE        ZinaidaE 580   	         0	         0	         0	         0	         0	         0
 PHONE        ZinaidaE HW    	         0	         0	         0	         0	         0	         0
@@ -2316,4 +2325,4 @@ TEST PHONE   09.2008 NONST  	         0	         0	         0	         0	       
 TEST PHONE   09.2009 BIR. NS	         0	         0	         0	         0	         0	         0
 TEST PHONE   09.2009 BIR. VP	         0	         0	         0	         0	         0	         0
 TEST PHONE   09.2009 BIRTHD.	         0	         0	         0	         0	         0	         0
- Total                      	       151	         1	       384	        35	         0	         0
+ Total                      	        28	         1	       471	        36	         0	         0

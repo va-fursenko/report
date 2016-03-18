@@ -37,7 +37,11 @@ if (preg_match($expr, $el, $matches)){
 
 <pre class="log-header">                                    [ I,    J,    K,    L,    M,    N,    O,    P,    Q,    R,    S,    T,    U,    V,    W,    X,    Y,    Z,   AC,   AD,   AE,   AF,   AG,   AH ]</pre>
 <pre class="log-container" id="logPre">
-<?= $report->showCells(); ?>
+<?php
+
+    echo $report->showCells();
+
+?>
 </pre>
 <pre class="log-header">                                    [ I,    J,    K,    L,    M,    N,    O,    P,    Q,    R,    S,    T,    U,    V,    W,    X,    Y,    Z,   AC,   AD,   AE,   AF,   AG,   AH ]</pre>
 
