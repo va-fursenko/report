@@ -29,8 +29,6 @@ try {
 
 
 
-
-
         // Первая матрица (большая)
         case 'openFirst':
             $result = readMatrix(XLS_FIRST, MATR_FIRST_COLS);
@@ -48,8 +46,8 @@ try {
         case 'openSecond':
             $result = readMatrix(XLS_SECOND, MATR_SECOND_COLS);
             if ($result['success']) {
-                $result['nextStep'] = 'process';
-                $result['nextMessage'] = "# Слияние массивов в общий список и вычисление отчёта";
+                $result['nextStep'] = 'merge';
+                $result['nextMessage'] = '# Слияние массивов в общий список';
             }
             break;
 
@@ -58,40 +56,49 @@ try {
 
 
         // Сливаем оба полученных массива вместе, получая список новых элементов
+        case 'merge':
+
+            // Пробуем создать объект отчёта
+
+            // Создаём объект отчёта
+            $report = new Report();
+            $report->merge(
+                json_decode(file_get_contents(XLS_ROOT . XLS_FIRST), true),
+                json_decode(file_get_contents(XLS_ROOT . XLS_SECOND), true)
+            );
+
+            // Сериализуем объект
+            file_put_contents(XLS_ROOT . JSON_REPORT_FILE, json_encode($report));
+
+            // Возвертаем осмысленное послание
+            $result = [
+                'success'       => true,
+                'nextStep'      => 'process',
+                'nextMessage'   => '# Вычисление отчёта',
+                'message'       => "Записей в объединённом массиве: " . $report->rowsCount() //. "\nИтог:" . $report->showCells(false),
+            ];
+
+
+            break;
+
+
+
+
+
+        // Вычисляем-вычисляем...
         case 'process':
 
-            // Пробуем создать объект отчёта и просчитать нужные данные
-            try {
+            $report = new Report();
+            $report->jsonImport(file_get_contents(XLS_ROOT . JSON_REPORT_FILE));
 
-                // Создаём объект отчёта
-                $report = new Report(
-                    json_decode(file_get_contents(XLS_ROOT . XLS_FIRST), true),
-                    json_decode(file_get_contents(XLS_ROOT . XLS_SECOND), true)
-                );
+            $result = $report->process();
 
-                // Сериализуем объединённую матрицу про запас
-                file_put_contents(XLS_ROOT . XLS_MERGED, json_encode($report->cells()));
-
-                // Грузим из файла формулы
-                $report->loadFormulas(CONFIG::ROOT . '/data/sheet2.xml');
-
-                // Вычисляем-вычисляем...
-                $report->process();
-
-                // Возвертаем осмысленное послание
-                $result = [
-                    'success'   => true,
-                    'message'   => "Записей в объединённом массиве: " . $report->rowsCount() . "\nИтог:" . $report->showCells(false),
-                ];
-
-                // В случае исключения сообщаем причину
-            }catch (Exception $e){
-                $result = [
-                    'success'   => false,
-                    'message'   => $e->getMessage(),
-                ];
+            if ($result['success']) {
+                $result['userData'] = $report->getResultUserData();
+                $result['message']  = '';
             }
             break;
+
 
 
 

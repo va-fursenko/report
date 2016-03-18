@@ -13,6 +13,8 @@ define('XLS_ROOT', CONFIG::ROOT . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPAR
 define('XLS_EXT', '.xls');
 // Имя временного файла для двух объединённых матриц
 define('XLS_MERGED', 'XLS_MERGED');
+// Сериализованный объект отчёта
+define('JSON_REPORT_FILE', 'REPORT_JSONED');
 
 
 

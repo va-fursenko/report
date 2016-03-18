@@ -24,6 +24,62 @@ function logLine(message){
 
 
 
+
+/**
+ * Завершение вычислений
+ */
+function onFinish(){
+    $("#beginBtn").show();
+    $("#logLoader").hide();
+}
+
+
+
+/**
+ * Вывод в удобоваримой форме пользовательских данных *
+ */
+function showUserData(data)
+{
+    var blueRows = [
+        "TOTAL THIS WEEK FROM WINTER CAMPAIGN",
+        "TOTAL THIS WEEK FROM ALL OTHER CAMPAIGNS",
+        "TOTAL THIS WEEK"
+    ];
+    var yellowRows = [
+        "Internet",
+        "Internet Load"
+    ];
+    var row, cell, table, tr, td;
+    table = $('table#userDataTable');
+    table.children('tbody').children('tr').remove();
+    for (row in data) {
+        tr = $('<tr>');
+
+        if (row.match(/^internet.*/i)) {
+            tr.addClass('bg-yellow');
+        } else if (blueRows.indexOf(row) != -1) {
+            tr.addClass('bg-blue');
+        } else if (row == 'Other channels') {
+            tr.addClass('b');
+        }
+
+        tr.append($('<td>').addClass('col-left').html(row));
+        for (cell in data[row]) {
+            td = $('<td>').addClass('res').html(data[row][cell]);
+            if ((row == 'Other channels') && ((cell == 'SG/TL') || (cell == 'APP'))) {
+                td.addClass('bg-blue');
+            }
+            tr.append(td);
+        }
+        table.append(tr);
+    }
+    $('#logPre').slideUp(500, function(){
+        $('#userDataTable').slideDown(500);
+    });
+
+}
+
+
 /**
  * Выполнение одного этапа задачи с логгированием результатов
  * @param act Действие для передачи в контроллер
@@ -34,30 +90,35 @@ function nextStep(act){
         url: '/controller.php?action=' + act,
         dataType: 'json',
         timeout: 240000,
-        success: function (data) {
-            if (data.success) {
-                logLine(data.message == ''
+        success: function (response) {
+            if (response.success) {
+                logLine(response.message == ''
                     ? "Завершено"
-                    : "Завершено. " + data.message
+                    : "Завершено. " + response.message
                 );
-                if (typeof data.nextStep !== 'undefined'){
+
+                // Если есть следующий этап, выполняем его
+                if (typeof response.nextStep !== 'undefined'){
                     logLine('');
-                    logLine(data.nextMessage);
-                    nextStep(data.nextStep);
+                    logLine(response.nextMessage);
+                    nextStep(response.nextStep);
+
+                // Прячем лоадер, показываем кнопку перезапуска и выводим удобный результат
                 }else{
-                    $("#beginBtn").show();
-                    $("#logLoader").hide();
+                    onFinish();
+                    if (typeof response.userData !== 'undefined'){
+                        showUserData(response.userData);
+                    }
                 }
+
             }else{
-                logLine("# Произошла ошибка: " + data.message);
-                $("#beginBtn").show();
-                $("#logLoader").hide();
+                logLine("# Произошла ошибка: " + response.message);
+                onFinish();
             }
         },
         error: function() {
             logLine("# Произошла ошибка");
-            $("#logLoader").hide();
-            $("#beginBtn").show();
+            onFinish();
         }
     });
 }
@@ -70,22 +131,22 @@ function nextStep(act){
  */
 $(window).load(function(){
     $(".notice-row").slideDown(500);
+    $('#userDataTable').hide();
 
     // Старт отчёта
     $("#beginBtn").click(function(){
         $(".notice-row").slideUp();
+        $('#userDataTable').slideUp();
         $("#beginBtn").hide();
         $("#logLoader").show();
         $("#logPre").text('');
+        $('#logPre').show();
 
-        // Без этого не работает
-        $("#mainImg").slideDown(1000);
-
-        //logLine('# Импорт широкой матрицы');
-        logLine("# Слияние массивов в общий список и вычисление отчёта");
+        logLine('# Импорт широкой матрицы');
+        //logLine("# Вычисление отчёта");
 
         // Выполняем первый шаг
-        //nextStep('openFirst');
-        nextStep('process');
+        nextStep('openFirst');
+        //nextStep('process');
     })
 });

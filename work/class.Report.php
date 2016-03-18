@@ -14,36 +14,9 @@ require_once(__DIR__ . DIRECTORY_SEPARATOR . 'config.Report.php');
  */
 class Report
 {
-
-    /**
-     * @const Разделитель столбца и ряда в обозначении ячейки в обработанной формуле
-     * ОДИН СИМВОЛ
-     */
-    const COL_ROW_DELIMITER = '.'; // Точка пока смотрится просто удобнее в дампе
-
-
-
-    /** @const Разница в индексе ряда между xls и матрицей рабочих данных */
-    const ROW_INDEX_DIFF = 4; // Ячейка U8 из xls в нашей матрице имеет индекс [12, 8 - ROW_INDEX_DIFF]. Т.е. сохраняя её формулу, уменьшим индекс ряда на ROW_INDEX_DIFF
-
-
-
-    /** @property array $group Сгруппированные айдишники
-     * [
-     *     'INTERNET' => ['INTERNET', 'INTERNET 2', 'INTERNET 9', ... ],
-     *     ...
-     */
-    public $rowGroups = [];
-
-
-
-
     // Инициализуется в result.captions.php Да, говнокод
     /** @const Константная ячейка */
     public static $CELL_I1 = -1000000; // Чтобы не забыть инициализовать
-
-    /** @const Заголовки рядов результата */
-    public static $RESULT_CAPTIONS = [];
 
     /** @const Группы айдишников, на которые забиваются все строки */
     public static $GROUP_KEYS = [];
@@ -54,8 +27,20 @@ class Report
     /** @const Связь между буквенной индексацией столбцов в xls и в матрице рабочих данных */
     public static $COL_INDEXES = [];
 
+
+
+
+
+
+    /** @property array $group Сгруппированные айдишники
+     * [
+     *     'INTERNET' => ['INTERNET', 'INTERNET 2', 'INTERNET 9', ... ],
+     *     ...
+     */
+    public $rowGroups = [];
+
     /** @property array Рабочие данные */
-    protected $_cells = [];
+    public $_cells = [];
 
     /** @property array Жёлтые ряды, которые вычисляются по одинаково простой схеме. Прогоним их через цикл */
     public $singleResultRows = [];
@@ -63,31 +48,16 @@ class Report
     /** @property array Результат отчёта */
     public $result = [];
 
-
-
     /**
      * @property array $keyIndexes
      * Порядковые (с 0) номера айдишников [0 => '21 CENTURY', 1 => 'ASET SG',...]
      * и обратные пары ['21 CENTURY' => 0, 'ASET SG' => 1,...]
-     * Короче говоря, двусторонняя ишачья залупа
+     * Короче говоря, двусторонняя ишачья шишка
      */
-    protected $keyIndexes = [];
+    public $keyIndexes = [];
 
 
 
-    /**
-     * @property array $formulas
-     * Тексты формул из оригинального файла отчёта
-     * <Шутка про фистинг/>
-     *
-     * Индексация идёт по ряду xls
-     * Если в ячейке есть формула суммирования, то оттуда выдирается строка с ячейками,
-     * буквенная индексация столбцов меняется на числовую, а числовая индексакция строк поправляется,
-     * чтобы соответствовать индексации в матрице рабочих данных
-     * Разделитель координат может быть любым и задаётся
-     * Например, '21' => ['E' => '0.123', 'F' => '12.123+18.123']
-     */
-    public $formulas = [];
 
 
 
@@ -115,11 +85,15 @@ class Report
         return $this->_cells[$row][$col];
     }
 
+
+
+    /**
+     * Геттер матрицы рабочих данных
+     */
     public function cells()
     {
         return $this->_cells;
     }
-
 
 
 
@@ -129,7 +103,7 @@ class Report
      * @param array $secondM
      * @throws BaseException
      */
-    public function __construct($firstM, $secondM)
+    public function merge($firstM, $secondM)
     {
         // За исключением двух строк в конце первого массива, они должны быть идентичными по ключам
 
@@ -146,6 +120,8 @@ class Report
         // Пройдём по второму массиву и сольём его со первым, проверяя, чтобы порядок ключей был одинаковым
         reset($firstM);
         $rowIndex = 0;
+        $this->keyIndexes = [];
+        $this->_cells = [];
         foreach ($secondM as $keySecond => $value) {
             $rowIndex++;
             $keyFirst = each($firstM)['key']; // Ключ первого массива на такой же позиции. Можно было его и засунуть внутрь ряда в отдельный столбец, но можно и так
@@ -177,6 +153,7 @@ class Report
         $this->keyIndexes[count($this->keyIndexes) - 1] = 'Total';
 
         // Проходим по матрице и раскладываем строки по группам айдишников
+        $this->rowGroups = [];
         foreach ($this->_cells as $key => $row) {
             // Подбираем группу, с которой начинается айдишник $key, и прерываем внутренний цикл
             foreach (self::$GROUP_KEYS as $groupKey) {
@@ -214,6 +191,7 @@ class Report
         );
 
         // Эту и предыдущую операцию можно было сделать в одном цикле, но мне кажется, что тут важнее хоть какая-то читаемость кода
+        $this->singleResultRows = [];
         foreach ($this->_cells as $key => $row) {
             if (!in_array($key, $exceptRows) && $this->sumCells(['I', 'U', 'AC'], $key) > 0) {
                 $this->singleResultRows[] = $key;
@@ -224,6 +202,20 @@ class Report
 
 
 
+    /**
+     * Импорт данных их json-строки
+     * @param string $str
+     */
+    public function jsonImport($str){
+        $str = json_decode($str, true);
+        $this->_cells = $str['_cells'];
+        $this->result = $str['result'];
+        $this->keyIndexes = $str['keyIndexes'];
+        $this->rowGroups = $str['rowGroups'];
+        //$this->formulas = $str['formulas'];
+        $this->singleResultRows = $str['singleResultRows'];
+    }
+
 
 
     /**
@@ -231,7 +223,6 @@ class Report
      * @return array Результат отчёта - $this->result
      */
     public function process(){
-        // Сегодня 15 марта 2016 года, 17:00 мск. Меня зовут Виктор и я начал вручную собирать примерно 384 ряда по 4 ячейки
         $this->result = [];
 
         #0 PRINT MEDIA
@@ -369,25 +360,6 @@ class Report
             ];
         }
 
-
-/*
- * Хуй у меня получилось сэкономить время, содрав формулы автоматом
- * Если слишколм долго вглядываться в этот отчёт, можно начать писать самому себе в комментах
-
-        // Проходим по всем яйчейкам с православно спизженными из куска xlsx шаблона в виде xml формулами
-        // Те из них, которые можно содрать автоматом, вычисляем
-        for ($i = 13; $i < count(self::$RESULT_CAPTIONS); $i++){ // $RESULT_CAPTIONS нумерация с 0
-            $row = $i + 8;
-            $this->result[self::$RESULT_CAPTIONS[$i]] = [
-                'prev_SG/TL' => isset($this->formulas[$row]['B']) ? $this->sumFormula($this->formulas[$row]['B']) : '',
-                'prev_APP'   => isset($this->formulas[$row]['C']) ? $this->sumFormula($this->formulas[$row]['C']) : '',
-                'SG/TL'      => isset($this->formulas[$row]['E']) ? $this->sumFormula($this->formulas[$row]['E']) : '',
-                'APP'        => isset($this->formulas[$row]['F']) ? $this->sumFormula($this->formulas[$row]['F']) : '',
-            ];
-        }
-
-*/
-
         # Link Exchange
         $this->result['Link Exchange'] = [
             'prev_SG/TL' => $this->sumCells(['J'],        'INTERNET     Link Exchange'),
@@ -396,7 +368,6 @@ class Report
             'APP'        => $this->sumCells(['U', 'AC'],  'INTERNET     Link Exchange')
         ];
 
-
         // Этот ряд будет вычислен попозжа, пока вставляем его на своё место
         $this->result['Other channels'] = [
             'prev_SG/TL' => 0,
@@ -404,7 +375,6 @@ class Report
             'SG/TL'      => 0,
             'APP'        => 0
         ];
-
 
         # Unidentified others by phone
         $this->result['Unidentified others by phone'] = [
@@ -463,7 +433,8 @@ class Report
           - $this->result['Unidentified others by phone']   ['prev_APP']
           - $this->result['Unidentified others written']    ['prev_APP'];
 
-        // Должно вычисляться в самую последнюю очередь, т.к. зависит от кучи предыдущих ячеек
+
+        // Должно вычисляться в самую последнюю очередь, т.к. зависит от предыдущих ячеек
         $this->result['Other channels']['SG/TL'] =
             $this->cell('Total', 'I')
           + self::$CELL_I1
@@ -475,9 +446,85 @@ class Report
           - array_sum(array_column($this->result, 'APP'));
 
 
+        // Самое важное в отчёте, чтобы две какие-то ячейки были по нулям
+        if ($this->result['Other channels']['SG/TL'] !== 0 || $this->result['Other channels']['APP'] !== 0){
+            return [
+                'success'   => false,
+                'message'   => "Отчёт не сошёлся! Other channels[SG/TL] = {$this->result['Other channels']['SG/TL']}, Other channels[APP] = {$this->result['Other channels']['APP']}"
+            ];
+        }
 
-        // Да ну нахуй, нереально. Этот метод никогда не будет дописан до конца... Не верю в это
-        return $this->result;
+
+        // Вычисляем итоговые ряды результата
+
+        # TOTAL THIS WEEK FROM WINTER CAMPAIGN                             WINTER IS COMING
+        foreach (['prev_SG/TL', 'prev_APP'] as $col) {
+            $this->result['TOTAL THIS WEEK FROM WINTER CAMPAIGN'][$col] =
+                $this->result['Print media adverts']             [$col]
+                + $this->result['Print media inserts']           [$col]
+                + $this->result['Remails']                       [$col]
+                + $this->result['Follow up']                     [$col]
+                + $this->result['Continuation graduates']        [$col]
+                + $this->result['Internet']                      [$col]
+                + $this->result['Internet Load']                 [$col]
+                + $this->result['Telemarketing']                 [$col]
+                + $this->result['Couriers']                      [$col]
+                + $this->result['Consultants']                   [$col]
+                + $this->result['Student-by-Student']            [$col]
+                + $this->result['Birthday action']               [$col]
+                + $this->result['Unidentified others by phone']  [$col]
+                + $this->result['Unidentified others written']   [$col];
+        }
+        foreach (['SG/TL', 'APP'] as $col) {
+            $this->result['TOTAL THIS WEEK FROM WINTER CAMPAIGN'][$col] =
+                array_sum(array_column($this->result, $col))
+                - $this->result['Link Exchange']                 [$col]
+                - $this->result['Other channels']                [$col];
+        }
+
+        # TOTAL THIS WEEK FROM ALL OTHER CAMPAIGNS
+        $this->result['TOTAL THIS WEEK FROM ALL OTHER CAMPAIGNS']   ['prev_SG/TL'] =
+            $this->result['Other channels']                         ['prev_SG/TL']
+          + $this->cell('Total', 'Q');
+        $this->result['TOTAL THIS WEEK FROM ALL OTHER CAMPAIGNS']   ['prev_APP'] =
+            $this->result['Other channels']                         ['prev_APP']
+            + $this->cell('Total', 'Y')
+            + $this->cell('Total', 'AG');
+        $this->result['TOTAL THIS WEEK FROM ALL OTHER CAMPAIGNS']   ['SG/TL'] =
+            $this->result['Other channels']                         ['SG/TL']
+            + $this->cell('Total', 'Q')
+            + $this->cell('Total', 'J');
+        $this->result['TOTAL THIS WEEK FROM ALL OTHER CAMPAIGNS']   ['APP'] =
+            $this->result['Other channels']                         ['APP']
+            + $this->cell('Total', 'Y')
+            + $this->cell('Total', 'V')
+            + $this->cell('Total', 'AD')
+            + $this->cell('Total', 'AG');
+
+        # TOTAL THIS WEEK
+        $this->result['TOTAL THIS WEEK']                                ['prev_SG/TL'] =
+            $this->result['TOTAL THIS WEEK FROM WINTER CAMPAIGN']       ['prev_SG/TL']
+          + $this->result['TOTAL THIS WEEK FROM ALL OTHER CAMPAIGNS']   ['prev_SG/TL']
+          + self::$CELL_I1;
+
+        $this->result['TOTAL THIS WEEK']                                ['prev_APP'] =
+            $this->result['TOTAL THIS WEEK FROM WINTER CAMPAIGN']       ['prev_APP']
+          + $this->result['TOTAL THIS WEEK FROM ALL OTHER CAMPAIGNS']   ['prev_APP'];
+
+        $this->result['TOTAL THIS WEEK']                                ['SG/TL'] =
+            $this->result['TOTAL THIS WEEK FROM WINTER CAMPAIGN']       ['SG/TL']
+          + $this->result['TOTAL THIS WEEK FROM ALL OTHER CAMPAIGNS']   ['SG/TL'];
+
+        $this->result['TOTAL THIS WEEK']                                ['APP'] =
+            $this->result['TOTAL THIS WEEK FROM WINTER CAMPAIGN']       ['APP']
+            + $this->result['TOTAL THIS WEEK FROM ALL OTHER CAMPAIGNS'] ['APP'];
+
+
+        // Казалось, этот метод никогда не будет дописан до конца...
+        return [
+            'success'   => true,
+            'message'   => 'Отчёт выполнен'
+        ];
     }
 
 
@@ -574,60 +621,6 @@ class Report
 
 
 
-
-    /**
-     * Суммирование ячеек по формуле
-     * @param string $formula Пожатый вид формулы - [столбец.ряд:столбец.ряд + ...]
-     * @return string
-     * @throws BaseException
-     */
-    public function sumFormula($formula){
-        if (!$formula){
-            return 0;
-        }
-
-        $sum = 0;
-
-        // Разбиваем строку на слагаемые
-        $elements = explode('+', $formula);
-        foreach ($elements as $element){
-
-            // Если в слагаемом задана отдельная ячейка, добавляем её к результату              $matches = [$element, столбец, ряд]
-            if (preg_match('/^(\d{1,5})\\' . self::COL_ROW_DELIMITER . '(\d{1,5})$/', $element, $matches)) {
-                $sum += $this->cell($matches[2], $matches[1]);
-
-            // Если в слагаемом задан диапазон ячеек, получаем его данные и запускаем суммирование по диапазону
-            } else if (preg_match('/^(\d{1,5})\\' . self::COL_ROW_DELIMITER . '(\d{1,5})\:(\d{1,5})\\' . self::COL_ROW_DELIMITER . '(\d{1,5})$/', $element, $matches)) {
-
-                // Задаём координаты области и поехали                                 $matches = [$element, столбец, ряд, столбец, ряд]
-                $sum += $this->sumCells(range($matches[1], $matches[3]), [$matches[2], $matches[4]]);
-
-
-            // Особые подход для особых ячеек
-            } else {
-
-                //
-                switch ($element){
-                    // Ячейка I1 забита константой, которой Энштейну не хватило для доказательства Теории относительноси
-                    case '0.-3':
-                        $sum += self::$CELL_I1;
-                        break;
-
-                    // По нашей босяцкой жизни непременно что-то пойдёт не так
-                    default:
-                        throw new BaseException("Что-то не так со слагаемым $element... Нет, ты правда верил в то, что это сработает?");
-                }
-            }
-
-        }
-
-        return $sum;
-    }
-
-
-
-
-
     /**
      * Вычисление суммы ячеек для выбранных строк и столбцов
      * @param array $colsIndexes Массив индексов столбцов, которые суммируются
@@ -638,7 +631,6 @@ class Report
     public function sumSelectCells($colsIndexes, $rows)
     {
         $sum = 0;
-
         // Проходим по всем строкам группы, проверяя, что они не в исключениях
         foreach ($rows as $rowKey){
             // Проходим по всем выбранным столбцам
@@ -646,7 +638,6 @@ class Report
                 $sum += $this->cell($rowKey, $col);
             }
         }
-
         return $sum;
     }
 
@@ -654,104 +645,6 @@ class Report
 
 
 /** - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Mr Hankey's christmas classics - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
-
-
-    /**
-     * Выковыривание текста формул из файла шаблона
-     * @param string $filename
-     * @return bool
-     */
-    public function loadFormulas($filename){
-        $xml = $xml = simplexml_load_file($filename);
-
-        $rowCounter = 1;
-        $this->formulas = [];
-        foreach ($xml->sheetData->row as $row) {
-            if ($rowCounter > 7) {
-                $counter = 0;
-                foreach ($row as $c) {
-                    if ($counter > 6) {
-                        break;
-                    }
-                    $counter++;
-                    $attr = $c->attributes();
-                    $ch = strval($attr['r'][0]);
-                    if (in_array($ch{0}, ['B', 'C', 'E', 'F'])) {
-                        //$result[$rowCounter][$ch] =	isset($c->f) ? (string)$c->f : '';
-                        if (isset($c->f) && (string)$c->f !== '') {
-                            $this->formulas[$rowCounter][$ch{0}] = (string)$c->f;
-                        }
-                    }
-                }
-            }
-            $rowCounter++;
-            if ($rowCounter > 375) {
-                // XML... ну вы понимаете...
-                break;
-            }
-        }
-
-        //var_dump($this->formulas);
-
-        // Трахаем формулы страпоном
-        $this->refactorFormulas();
-
-        return true;
-    }
-
-
-
-
-
-
-    /**
-     * Преобразование массива формул в формат (числовой индекс строки - числовой индекс столбца) в матрице рабочих данных
-     * @return bool
-     * @throws BaseException
-     */
-    protected function refactorFormulas()
-    {
-
-        // Проходим по всем рядам и столбцам
-        foreach ($this->formulas as $rowIndex => $row) {
-            foreach ($row as $colIndex => $cell) {
-                if ($cell === '') {
-                    continue;
-                }
-                // Убираем лишние символы, заменяем запятую (перечисление) на +
-                $cell = str_replace('$', '', $cell);
-                $cell = str_replace(')', '', $cell);
-                $cell = str_replace('SUM(', '', $cell);
-                $cell = str_replace(',', '+', $cell);
-
-                // Заменяем символьное обозначение столбца на числовое
-                preg_match_all('/([A-Z]{1,2})(\d{1,5})/i', $cell, $matches);
-                foreach ($matches[0] as $i => $cl){
-                    $col = $matches[1][$i];
-                    $row = $matches[2][$i];
-                    if (self::hasCol($col)){
-                        //throw new BaseException("Столбец '$col' нам неизвестен");
-                        continue;
-                    }
-
-                    $cell = str_replace(
-                        $matches[0][$i],
-                        self::colIndex($col) . self::COL_ROW_DELIMITER . ($row - self::ROW_INDEX_DIFF),
-                        $cell
-                    );
-                }
-
-                // В конце концов, заменяем исходную ячейку обработанной
-                $this->formulas[$rowIndex][$colIndex] = $cell;
-            }
-        }
-        return true;
-    }
-
-
-
-
 
 
     /** Число строк в рабочем наборе */
@@ -762,33 +655,14 @@ class Report
 
 
 
-    /** Вывод в удобном виде формул */
-    public function showFormulas()
-    {
-        $result = "[\n";
-        foreach ($this->formulas as $k => $subArr) {
-            $result .= "\t" . Filter::strPad("'$k'", 6) . " => [";
-            $row = '';
-            foreach ($subArr as $key => $cell) {
-                $row .= $row ? ', ' : '';
-                $row .= "'$key' => '$cell'";
-            }
-            $result .= "$row],\n";
-        }
-        return "$result\n]";
-    }
-
-
-
     /** Вывод в удобном виде результата */
     public function showResult(){
         $result = '';
-        reset(self::$RESULT_CAPTIONS);
         foreach ($this->result as $k => $subArr) {
-            $result .= "\t" . Filter::strPad("'$k'", 32) . " => [ ";
+            $result .= "\t" . Filter::strPad("'$k'", 42) . " => [ ";
             $row = '';
             foreach ($subArr as $key => $cell) {
-                $row .= Filter::strPad("$cell", $key !== 'APP' ? 12 : 3);
+                $row .= Filter::strPad("$cell", $key !== 'APP' ? 12 : 4);
             }
             $result .= "$row],\n";
         }
@@ -822,7 +696,6 @@ class Report
 
 
 
-
     /**
      * Числовой индекс столбца
      * @param string|array $cols
@@ -850,4 +723,255 @@ class Report
     public static function hasCol($col){
         return isset(self::$COL_INDEXES[$col]);
     }
+
+
+
+
+    /**
+     * Выжимка из результата полезных для пользователя данных в виде ассоциативного массива
+     * @return array
+     */
+    public function getResultUserData(){
+        $result = [];
+        $fixedRows = [
+            'Print media adverts',
+            'Print media inserts',
+            'Remails',
+            'Follow up',
+            'Continuation graduates',
+            'Internet',
+            'Internet Load',
+            'Telemarketing',
+            'Couriers',
+            'Consultants',
+            'Student-by-Student',
+            'Birthday action',
+            'TOTAL THIS WEEK FROM WINTER CAMPAIGN',
+            'TOTAL THIS WEEK FROM ALL OTHER CAMPAIGNS',
+            'TOTAL THIS WEEK',
+        ];
+        foreach ($this->result as $key => $row){
+            if (in_array($key, $fixedRows) || array_sum($row) > 0){
+                $result[$key] = $row;
+            }
+        }
+        return $result;
+    }
 }
+
+
+
+
+
+
+
+
+/*
+ * Я искренне надеюсь, что нижезакоменченное никому и никогда не понадобится. Но, если что, там чтение формул из xml - куска xlsx,
+ * перегонка формул в наши координаты и метод вычисления значения одной такой формулы
+ *
+ *
+ *
+ *
+ *
+    /**
+     * @const Разница в индексе ряда между xls и матрицей рабочих данных
+     * Используется только для формул, так что здесь не нужно
+     *
+    //public static $ROW_INDEX_DIFF = -1000000; // Ячейка U8 из xls в нашей матрице имеет индекс [12, 8 - ROW_INDEX_DIFF]. Т.е. сохраняя её формулу, уменьшим индекс ряда на ROW_INDEX_DIFF
+
+    /**
+     * @const Разделитель столбца и ряда в обозначении ячейки в обработанной формуле
+     * ОДИН СИМВОЛ
+     * Используется только для формул, так что наверное не нужна
+     *
+    //const COL_ROW_DELIMITER = '.'; // Точка пока смотрится просто удобнее в дампе
+
+
+
+
+    /**
+     * @property array $formulas
+     * Тексты формул из оригинального файла отчёта
+     * <Шутка про фистинг/>
+     *
+     * Индексация идёт по ряду xls
+     * Если в ячейке есть формула суммирования, то оттуда выдирается строка с ячейками,
+     * буквенная индексация столбцов меняется на числовую, а числовая индексакция строк поправляется,
+     * чтобы соответствовать индексации в матрице рабочих данных
+     * Разделитель координат может быть любым и задаётся
+     * Например, '21' => ['E' => '0.123', 'F' => '12.123+18.123']
+     *
+     * Наверное, не нужно
+     *
+    //public $formulas = [];
+
+ /*
+ * Хрен у меня получилось сэкономить время, содрав формулы автоматом
+ * Если слишколм долго вглядываться в этот отчёт, можно начать писать самому себе в комментах
+
+        // Проходим по всем яйчейкам с православно спизженными из куска xlsx шаблона в виде xml формулами
+        // Те из них, которые можно содрать автоматом, вычисляем
+        for ($i = 13; $i < count(self::$RESULT_CAPTIONS); $i++){ // $RESULT_CAPTIONS нумерация с 0
+            $row = $i + 8;
+            $this->result[self::$RESULT_CAPTIONS[$i]] = [
+                'prev_SG/TL' => isset($this->formulas[$row]['B']) ? $this->sumFormula($this->formulas[$row]['B']) : '',
+                'prev_APP'   => isset($this->formulas[$row]['C']) ? $this->sumFormula($this->formulas[$row]['C']) : '',
+                'SG/TL'      => isset($this->formulas[$row]['E']) ? $this->sumFormula($this->formulas[$row]['E']) : '',
+                'APP'        => isset($this->formulas[$row]['F']) ? $this->sumFormula($this->formulas[$row]['F']) : '',
+            ];
+        }
+
+     /**
+     * Суммирование ячеек по формуле
+     * @param string $formula Пожатый вид формулы - [столбец.ряд:столбец.ряд + ...]
+     * @return string
+     * @throws BaseException
+     *
+public function sumFormula($formula){
+    if (!$formula){
+        return 0;
+    }
+
+    $sum = 0;
+
+    // Разбиваем строку на слагаемые
+    $elements = explode('+', $formula);
+    foreach ($elements as $element){
+
+        // Если в слагаемом задана отдельная ячейка, добавляем её к результату              $matches = [$element, столбец, ряд]
+        if (preg_match('/^(\d{1,5})\\' . self::COL_ROW_DELIMITER . '(\d{1,5})$/', $element, $matches)) {
+            $sum += $this->cell($matches[2], $matches[1]);
+
+            // Если в слагаемом задан диапазон ячеек, получаем его данные и запускаем суммирование по диапазону
+        } else if (preg_match('/^(\d{1,5})\\' . self::COL_ROW_DELIMITER . '(\d{1,5})\:(\d{1,5})\\' . self::COL_ROW_DELIMITER . '(\d{1,5})$/', $element, $matches)) {
+
+            // Задаём координаты области и поехали                                 $matches = [$element, столбец, ряд, столбец, ряд]
+            $sum += $this->sumCells(range($matches[1], $matches[3]), [$matches[2], $matches[4]]);
+
+
+            // Особые подход для особых ячеек
+        } else {
+
+            //
+            switch ($element){
+                // Ячейка I1 забита константой, которой Энштейну не хватило для доказательства Теории относительноси
+                case '0.-3':
+                    $sum += self::$CELL_I1;
+                    break;
+
+                // По нашей босяцкой жизни непременно что-то пойдёт не так
+                default:
+                    throw new BaseException("Что-то не так со слагаемым $element... Нет, ты правда верил в то, что это сработает?");
+            }
+        }
+
+    }
+    return $sum;
+}
+
+
+
+    /**
+     * Выковыривание текста формул из файла шаблона
+     * @param string $filename
+     * @return bool
+     *
+public function loadFormulas($filename){
+    $xml = $xml = simplexml_load_file($filename);
+
+    $rowCounter = 1;
+    $this->formulas = [];
+    foreach ($xml->sheetData->row as $row) {
+        if ($rowCounter > 7) {
+            $counter = 0;
+            foreach ($row as $c) {
+                if ($counter > 6) {
+                    break;
+                }
+                $counter++;
+                $attr = $c->attributes();
+                $ch = strval($attr['r'][0]);
+                if (in_array($ch{0}, ['B', 'C', 'E', 'F'])) {
+                    //$result[$rowCounter][$ch] =	isset($c->f) ? (string)$c->f : '';
+                    if (isset($c->f) && (string)$c->f !== '') {
+                        $this->formulas[$rowCounter][$ch{0}] = (string)$c->f;
+                    }
+                }
+            }
+        }
+        $rowCounter++;
+        if ($rowCounter > 375) {
+            // XML... ну вы понимаете...
+            break;
+        }
+    }
+    $this->refactorFormulas();
+    return true;
+}
+
+
+
+    /**
+     * Преобразование массива формул в формат (числовой индекс строки - числовой индекс столбца) в матрице рабочих данных
+     * @return bool
+     * @throws BaseException
+     *
+protected function refactorFormulas()
+{
+    // Проходим по всем рядам и столбцам
+    foreach ($this->formulas as $rowIndex => $row) {
+        foreach ($row as $colIndex => $cell) {
+            if ($cell === '') {
+                continue;
+            }
+            // Убираем лишние символы, заменяем запятую (перечисление) на +
+            $cell = str_replace('$', '', $cell);
+            $cell = str_replace(')', '', $cell);
+            $cell = str_replace('SUM(', '', $cell);
+            $cell = str_replace(',', '+', $cell);
+
+            // Заменяем символьное обозначение столбца на числовое
+            preg_match_all('/([A-Z]{1,2})(\d{1,5})/i', $cell, $matches);
+            foreach ($matches[0] as $i => $cl){
+                $col = $matches[1][$i];
+                $row = $matches[2][$i];
+                if (self::hasCol($col)){
+                    //throw new BaseException("Столбец '$col' нам неизвестен");
+                    continue;
+                }
+
+                $cell = str_replace(
+                    $matches[0][$i],
+                    self::colIndex($col) . self::COL_ROW_DELIMITER . ($row - self::$ROW_INDEX_DIFF),
+                    $cell
+                );
+            }
+
+            // В конце концов, заменяем исходную ячейку обработанной
+            $this->formulas[$rowIndex][$colIndex] = $cell;
+        }
+    }
+    return true;
+}
+
+
+
+    /** Вывод в удобном виде формул *
+public function showFormulas()
+{
+    $result = "[\n";
+    foreach ($this->formulas as $k => $subArr) {
+        $result .= "\t" . Filter::strPad("'$k'", 6) . " => [";
+        $row = '';
+        foreach ($subArr as $key => $cell) {
+            $row .= $row ? ', ' : '';
+            $row .= "'$key' => '$cell'";
+        }
+        $result .= "$row],\n";
+    }
+    return "$result\n]";
+}
+
+
+ * */
